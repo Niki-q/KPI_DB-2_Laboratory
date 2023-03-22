@@ -184,5 +184,5 @@ fabric.properties
 
 # files with explanations of fields for csv files
 
-./app/data/*.xls
-./app/data/*.xlsx
+app/data/*.xls
+app/data/*.xlsx
