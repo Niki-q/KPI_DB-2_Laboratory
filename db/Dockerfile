@@ -1,11 +1,23 @@
-FROM postgres:latest
+FROM postgres:15
 
-# Copy custom postgresql.conf into container
-COPY postgresql.conf /etc/postgresql/postgresql.conf
+# Установка необходимых пакетов
+RUN apt-get update && apt-get install -y \
+    netcat \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
 
-# Expose PostgreSQL port
+
+
+
+# Копирование init.sql в контейнер
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Изменение порта на 5432
 EXPOSE 5432
 
-# Start PostgreSQL
-CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+# Конфигурация healthcheck
+HEALTHCHECK --interval=5s --timeout=3s \
+    CMD pg_isready -h localhost -U myuser -d mydb -p 5432 || exit 1
+
+CMD ["postgres", "-p", "5432"]
 

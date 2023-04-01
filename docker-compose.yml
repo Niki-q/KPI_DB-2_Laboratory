@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   db:
@@ -6,19 +6,16 @@ services:
       context: ./db
       dockerfile: Dockerfile
     environment:
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "my_username" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     restart: always
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - MY
 
   app:
     build:
@@ -36,21 +33,27 @@ services:
       - ./app/data:/app/data
       - ./app/app.py:/app/app.py
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+#        condition: service_healthy
+    networks:
+      - MY
 
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@myapp.com
-      PGADMIN_DEFAULT_PASSWORD: my_admin_password
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_USER}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - "80:80"
     depends_on:
       - db
+    networks:
+      - MY
 
 volumes:
   db_data:
 
+networks:
+  MY:
 
 
