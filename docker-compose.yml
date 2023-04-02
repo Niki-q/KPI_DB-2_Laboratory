@@ -29,11 +29,14 @@ services:
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+      RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
+      OUTPUT_FILE_NAME: ${OUTPUT_FILE_NAME}
     volumes:
       - ./app/data:/app/data
-      - ./app/app.py:/app/app.py
+#      - ./app/app.py:/app/app.py
     depends_on:
       - db
+#      db:
 #        condition: service_healthy
     networks:
       - MY
