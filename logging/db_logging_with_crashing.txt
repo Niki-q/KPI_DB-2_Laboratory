@@ -1,0 +1,41 @@
+2023-04-02 23:55:40 2023-04-02 20:55:40.182 UTC [1] LOG:  received fast shutdown request
+2023-04-02 23:55:40 2023-04-02 20:55:40.186 UTC [1] LOG:  aborting any active transactions
+2023-04-02 23:55:40 2023-04-02 20:55:40.186 UTC [1707] FATAL:  terminating connection due to administrator command
+2023-04-02 23:55:40 2023-04-02 20:55:40.186 UTC [395] FATAL:  terminating connection due to administrator command
+2023-04-02 23:55:40 2023-04-02 20:55:40.186 UTC [405] FATAL:  terminating connection due to administrator command
+2023-04-02 23:55:40 2023-04-02 20:55:40.187 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+2023-04-02 23:55:40 2023-04-02 20:55:40.192 UTC [27] LOG:  shutting down
+2023-04-02 23:55:40 2023-04-02 20:55:40.195 UTC [27] LOG:  checkpoint starting: shutdown immediate
+2023-04-02 23:55:40 2023-04-02 20:55:40.297 UTC [27] LOG:  checkpoint complete: wrote 4762 buffers (29.1%); 0 WAL file(s) added, 2 removed, 0 recycled; write=0.028 s, sync=0.052 s, total=0.106 s; sync files=42, longest=0.015 s, average=0.002 s; distance=39855 kB, estimate=470477 kB
+2023-04-02 23:55:40 2023-04-02 20:55:40.314 UTC [1] LOG:  database system is shut down
+2023-04-02 23:57:04 2023-04-02 20:57:04.340 UTC [1] LOG:  starting PostgreSQL 15.2 (Debian 15.2-1.pgdg110+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2023-04-02 23:57:04 2023-04-02 20:57:04.340 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2023-04-02 23:57:04 2023-04-02 20:57:04.340 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2023-04-02 23:57:04 2023-04-02 20:57:04.346 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2023-04-02 23:57:04 2023-04-02 20:57:04.354 UTC [29] LOG:  database system was shut down at 2023-04-02 20:55:40 UTC
+2023-04-02 23:57:04 2023-04-02 20:57:04.360 UTC [1] LOG:  database system is ready to accept connections
+2023-04-03 00:00:15 2023-04-02 21:00:15.478 UTC [27] LOG:  checkpoint starting: wal
+2023-04-03 00:02:13 2023-04-02 21:02:13.848 UTC [1] LOG:  received fast shutdown request
+2023-04-03 00:02:13 2023-04-02 21:02:13.852 UTC [1] LOG:  aborting any active transactions
+2023-04-03 00:02:13 2023-04-02 21:02:13.852 UTC [66] FATAL:  terminating connection due to administrator command
+2023-04-03 00:02:13 2023-04-02 21:02:13.852 UTC [33] FATAL:  terminating connection due to administrator command
+2023-04-03 00:02:13 2023-04-02 21:02:13.853 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+2023-04-03 00:02:14 2023-04-02 21:02:14.042 UTC [27] LOG:  checkpoint complete: wrote 2290 buffers (14.0%); 0 WAL file(s) added, 0 removed, 33 recycled; write=118.374 s, sync=0.043 s, total=118.564 s; sync files=19, longest=0.012 s, average=0.003 s; distance=528737 kB, estimate=528737 kB
+2023-04-03 00:02:14 2023-04-02 21:02:14.042 UTC [27] LOG:  shutting down
+2023-04-03 00:02:14 2023-04-02 21:02:14.045 UTC [27] LOG:  checkpoint starting: shutdown immediate
+2023-04-03 00:02:14 2023-04-02 21:02:14.226 UTC [27] LOG:  checkpoint complete: wrote 13942 buffers (85.1%); 0 WAL file(s) added, 0 removed, 22 recycled; write=0.060 s, sync=0.019 s, total=0.185 s; sync files=18, longest=0.004 s, average=0.002 s; distance=371899 kB, estimate=513053 kB
+2023-04-03 00:02:14 2023-04-02 21:02:14.240 UTC [1] LOG:  database system is shut down
+2023-04-03 00:02:31 2023-04-02 21:02:31.450 UTC [1] LOG:  starting PostgreSQL 15.2 (Debian 15.2-1.pgdg110+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+2023-04-03 00:02:31 2023-04-02 21:02:31.450 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2023-04-03 00:02:31 2023-04-02 21:02:31.450 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2023-04-03 00:02:31 2023-04-02 21:02:31.457 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2023-04-03 00:02:31 2023-04-02 21:02:31.464 UTC [29] LOG:  database system was shut down at 2023-04-02 21:02:14 UTC
+2023-04-03 00:02:31 2023-04-02 21:02:31.470 UTC [1] LOG:  database system is ready to accept connections
+2023-04-03 00:05:35 2023-04-02 21:05:35.435 UTC [27] LOG:  checkpoint starting: wal
+2023-04-03 00:09:26 2023-04-02 21:09:26.451 UTC [27] LOG:  checkpoint complete: wrote 1966 buffers (12.0%); 0 WAL file(s) added, 0 removed, 33 recycled; write=230.853 s, sync=0.018 s, total=231.017 s; sync files=20, longest=0.002 s, average=0.001 s; distance=528853 kB, estimate=528853 kB
+2023-04-02 23:57:04 
+2023-04-02 23:57:04 PostgreSQL Database directory appears to contain a database; Skipping initialization
+2023-04-02 23:57:04 
+2023-04-03 00:02:31 
+2023-04-03 00:02:31 PostgreSQL Database directory appears to contain a database; Skipping initialization
+2023-04-03 00:02:31 
