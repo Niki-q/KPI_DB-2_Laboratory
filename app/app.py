@@ -181,6 +181,8 @@ WHERE
 	ukrball IS NOT NULL
 AND 
 	ukrball::text !~ '[^0-9.-]'
+AND
+    ukrteststatus = 'Зараховано'
 GROUP BY 
 	regname,
 	YEAR
