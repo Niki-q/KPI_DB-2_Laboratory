@@ -51,6 +51,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./migrate/migrate.py:/app/migrate.py
+      - ./migrate/models.py:/app/models.py
     depends_on:
       - db
     networks:

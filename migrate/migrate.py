@@ -36,7 +36,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-
+from models import Testing, Participant, PointOfObservation, Territory, EducationalInstitution
 
 
 if __name__ == '__main__':
