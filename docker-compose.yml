@@ -21,8 +21,6 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     environment:
       DB_HOST: db
       DB_PORT: ${DB_PORT}
@@ -40,6 +38,28 @@ services:
 #        condition: service_healthy
     networks:
       - MY
+
+  app-migrate:
+    build:
+      context: ./migrate
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./migrate/migrate.py:/app/migrate.py
+    depends_on:
+      - db
+    networks:
+      - MY
+
+#  web:
+#    ports:
+#      - "8000:8000"
+
 
   pgadmin:
     image: dpage/pgadmin4
