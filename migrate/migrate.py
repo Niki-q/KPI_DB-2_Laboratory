@@ -71,6 +71,7 @@ class Participant(db.Model):
 
     ID = db.Column(db.String, primary_key=True)
     Birth = db.Column(db.Integer)
+    SexTypeName = db.Column(db.String)
     RegName = db.Column(db.String)
     AreaName = db.Column(db.String)
     Ter_id = db.Column(db.String, db.ForeignKey('territories.ID'))
@@ -78,9 +79,10 @@ class Participant(db.Model):
     ClassLangName = db.Column(db.String)
     EO_id = db.Column(db.String, db.ForeignKey('educational_institutions.ID'))
 
-    def __init__(self, ID, Birth, RegName, AreaName, Ter_id, ClassProfileName, ClassLangName, EO_id):
+    def __init__(self, ID, Birth, SexTypeName, RegName, AreaName, Ter_id, ClassProfileName, ClassLangName, EO_id):
         self.ID = ID
         self.Birth = Birth
+        self.SexTypeName = SexTypeName
         self.RegName = RegName
         self.AreaName = AreaName
         self.Ter_id = Ter_id
@@ -355,6 +357,7 @@ def migrate_data():
         participant = Participant(
             ID=generate_unique_id(),
             Birth=row['Birth'],
+            SexTypeName=row['SEXTYPENAME'],
             RegName=row['RegName'],
             AreaName=row['AreaName'],
             Ter_id=get_model_id(Territory, Name=row['TerName'], TypeName=row['TerTypeName']),
@@ -397,7 +400,6 @@ def migrate_data():
                     lang = None
                 else:
                     lang = row[f'{subject}Lang']
-
 
                 result = Testing(
                     ID=generate_unique_id(),

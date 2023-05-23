@@ -54,7 +54,6 @@ services:
       RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
     volumes:
       - ./migrate/migrate.py:/app/migrate.py
-      - ./migrate/models.py:/app/models.py
     depends_on:
       - db
     networks:
