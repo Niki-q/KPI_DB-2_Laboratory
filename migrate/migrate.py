@@ -45,8 +45,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-# Модель таблиці "testings"
-
 class EducationalInstitution(db.Model):
     __tablename__ = 'educational_institutions'
 
@@ -185,7 +183,6 @@ def open_conn(db_config):
 def migrate_data(count_rows:int):
     res_zno_data = db.session.execute(
         text(f'SELECT * FROM {GENERAL_TABLE_NAME} ORDER BY outid ASC LIMIT {count_rows}'))
-    columns = res_zno_data.keys()
     columns2 = ["OutID", "Birth", "SEXTYPENAME", "RegName", "AreaName", "TerName", "REGTYPENAME", "TerTypeName",
                 "ClassProfileName", "ClassLangName", "EOName", "EOTypeName", "EORegName", "EOAreaName", "EOTerName",
                 "EOParent", "UkrTest", "UkrTestStatus", "UkrBall100", "UkrBall12", "UkrBall", "UkrAdaptScale",
@@ -281,6 +278,9 @@ def migrate_data(count_rows:int):
         subjects = ['Ukr', 'hist', 'math', 'phys', 'chem', 'bio', 'geo', 'eng', 'fra', 'deu', 'spa']
         for subject in subjects:
             if check_subject(subject):
+
+                #  Points of observation
+
                 point = PointOfObservation.query.filter_by(Name=row[f"{subject}PTName"],
                                                            RegName=row[f'{subject}PTRegName'],
                                                            AreaName=row[f'{subject}PTAreaName'],
@@ -293,11 +293,13 @@ def migrate_data(count_rows:int):
                                                TerName=row[f"{subject}PTTerName"])
                 db.session.add(point)
 
+                # перевірка якщо предмет не Українська мова і література - встановити адаптивний поріг у значення NULL
                 if subject not in ['Ukr']:
                     adaptscale = None
                 else:
                     adaptscale = row[f'{subject}AdaptScale']
 
+                # перевірка якщо предмет є мовним - встановити мову складання у значення NULL
                 if subject in ['Ukr', 'fra', 'deu', 'spa', 'eng']:
                     lang = None
                 else:
@@ -318,8 +320,9 @@ def migrate_data(count_rows:int):
 
                 db.session.add(result)
         db.session.commit()
+        # Логування кожних 1000 рядків старих даних
         if count % 1000 == 0:
-            logger.info(f'Migrated {count} lines')
+            logger.info(f'Переміщено {count} рядків')
 
 
 def execute_query(conn: psycopg2.extensions.connection, query: str, csv_name: str or None = None) -> None:
@@ -400,19 +403,22 @@ GROUP BY
         p."RegName";
         """
 
+    logger.info("Виконується підготовка до міграції")
     execute_query(conn, CLEAN_QUERY)
-    logger.info("Підготовка до мігації - Виконано!")
     conn.close()
 
     logger.info("Розпочато міграцію...")
     with app.app_context():
         db.create_all()
-        rows = 2000
+        rows = 10000
         migrate_data(count_rows=rows)
+
+        # залишаємо запуск веб додатка для наступної лабораторної
         # app.run(host='0.0.0.0')
+
     logger.info(f"Міграцію {rows} рядків - Виконано!")
 
-    # conn = open_conn(DB_CONFIG)
+    conn = open_conn(DB_CONFIG)
     logger.info("Виконується запит до завдання з варіантом 2")
     execute_query(conn, TASK_QUERY1, 'results/result_variant_2.csv')
 
@@ -420,4 +426,5 @@ GROUP BY
     execute_query(conn, TASK_QUERY2, 'results/result_variant_2_type2.csv')
     conn.close()
 
-    logger.info("Час виконання програми: %s секунд" % (time.time() - start_time))
+    fin_time = time.time() - start_time
+    logger.info(f"Час виконання програми: {fin_time} секунд ({round(fin_time/60,2)} хвилин) ")
