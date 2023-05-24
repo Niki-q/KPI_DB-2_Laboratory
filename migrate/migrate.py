@@ -1,12 +1,18 @@
+import csv
 import logging
 import os
 import time
 import uuid
 
+import psycopg2
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from psycopg2 import OperationalError
 from sqlalchemy import text
+
+GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
+OUT_CSV_FILE = os.getenv("OUTPUT_FILE_NAME")
 
 DB_CONFIG = {'user': os.getenv("DB_USER"),
              'password': os.getenv("DB_PASSWORD"),
@@ -14,14 +20,8 @@ DB_CONFIG = {'user': os.getenv("DB_USER"),
              'port': os.getenv("DB_PORT"),
              'database': os.getenv("DB_NAME")}
 
-SQLA_CONFIG_STR = f"postgresql://"f"" \
-                  f"{DB_CONFIG['user']}" \
-                  f":{DB_CONFIG['password']}" \
-                  f"@{DB_CONFIG['host']}" \
-                  f":{DB_CONFIG['port']}" \
-                  f"/{DB_CONFIG['database']}"
 
-new_SQLA_CONFIG_STR = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
+SQLA_CONFIG_STR = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
 
 
 def init_logging():
@@ -37,7 +37,7 @@ def init_logging():
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = new_SQLA_CONFIG_STR
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLA_CONFIG_STR
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -148,141 +148,43 @@ class Testing(db.Model):
         self.AdaptScale = AdaptScale
 
 
-# class OldData(db.Model):
-#     __tablename__ = 'zno_result'
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#     outid = db.Column(db.String(255))
-#     birth = db.Column(db.Integer)
-#     sextypename = db.Column(db.String(255))
-#     regname = db.Column(db.String(255))
-#     areaname = db.Column(db.String(255))
-#     tername = db.Column(db.String(255))
-#     regtypename = db.Column(db.String(255))
-#     tertypename = db.Column(db.String(255))
-#     classprofilename = db.Column(db.String(255))
-#     classlangname = db.Column(db.String(255))
-#     eoname = db.Column(db.String(255))
-#     eotypename = db.Column(db.String(255))
-#     eoregname = db.Column(db.String(255))
-#     eoareaname = db.Column(db.String(255))
-#     eotername = db.Column(db.String(255))
-#     eoparent = db.Column(db.String(255))
-# ukrtest = db.Column(db.String(255))
-# ukrteststatus = db.Column(db.String(255))
-# ukrball100 = db.Column(db.Float)
-# ukrball12 = db.Column(db.Float)
-# ukrball = db.Column(db.Float)
-# ukradaptscale = db.Column(db.String(255))
-# ukrptname = db.Column(db.String(255))
-# ukrptregname = db.Column(db.String(255))
-# ukrptareaname = db.Column(db.String(255))
-# ukrpttername = db.Column(db.String(255))
-# histtest = db.Column(db.String(255))
-# histlang = db.Column(db.String(255))
-# histteststatus = db.Column(db.String(255))
-# histball100 = db.Column(db.Float)
-# histball12 = db.Column(db.Float)
-# histball = db.Column(db.Float)
-# histptname = db.Column(db.String(255))
-# histptregname = db.Column(db.String(255))
-# histptareaname = db.Column(db.String(255))
-# histpttername = db.Column(db.String(255))
-# mathtest = db.Column(db.String(255))
-# mathlang = db.Column(db.String(255))
-# mathteststatus = db.Column(db.String(255))
-# mathball100 = db.Column(db.Float)
-# mathball12 = db.Column(db.Float)
-# mathball = db.Column(db.Float)
-# mathptname = db.Column(db.String(255))
-# mathptregname = db.Column(db.String(255))
-# mathptareaname = db.Column(db.String(255))
-# mathpttername = db.Column(db.String(255))
-# phystest = db.Column(db.String(255))
-# physlang = db.Column(db.String(255))
-# physteststatus = db.Column(db.String(255))
-# physball100 = db.Column(db.Float)
-# physball12 = db.Column(db.Float)
-# physball = db.Column(db.Float)
-# physptname = db.Column(db.String(255))
-# physptregname = db.Column(db.String(255))
-# physptareaname = db.Column(db.String(255))
-# physpttername = db.Column(db.String(255))
-# chemtest = db.Column(db.String(255))
-# chemlang = db.Column(db.String(255))
-# chemteststatus = db.Column(db.String(255))
-# chemball100 = db.Column(db.Float)
-# chemball12 = db.Column(db.Float)
-# chemball = db.Column(db.Float)
-# chemptname = db.Column(db.String(255))
-# chemptregname = db.Column(db.String(255))
-# chemptareaname = db.Column(db.String(255))
-# chempttername = db.Column(db.String(255))
-# biotest = db.Column(db.String(255))
-# biolang = db.Column(db.String(255))
-# bioteststatus = db.Column(db.String(255))
-# bioball100 = db.Column(db.Float)
-# bioball12 = db.Column(db.Float)
-# bioball = db.Column(db.Float)
-# bioptname = db.Column(db.String(255))
-# bioptregname = db.Column(db.String(255))
-# bioptareaname = db.Column(db.String(255))
-# biopttername = db.Column(db.String(255))
-# geotest = db.Column(db.String(255))
-# geolang = db.Column(db.String(255))
-# geoteststatus = db.Column(db.String(255))
-# geoball100 = db.Column(db.Float)
-# geoball12 = db.Column(db.Float)
-# geoball = db.Column(db.Float)
-# geoptname = db.Column(db.String(255))
-# geoptregname = db.Column(db.String(255))
-# geoptareaname = db.Column(db.String(255))
-# geopttername = db.Column(db.String(255))
-# engtest = db.Column(db.String(255))
-# engteststatus = db.Column(db.String(255))
-# engball100 = db.Column(db.Float)
-# engball12 = db.Column(db.Float)
-# engdpalevel = db.Column(db.String(255))
-# engball = db.Column(db.Float)
-# engptname = db.Column(db.String(255))
-# engptregname = db.Column(db.String(255))
-# engptareaname = db.Column(db.String(255))
-# engpttername = db.Column(db.String(255))
-# fratest = db.Column(db.String(255))
-# frateststatus = db.Column(db.String(255))
-# fraball100 = db.Column(db.Float)
-# fraball12 = db.Column(db.Float)
-# fradpalevel = db.Column(db.String(255))
-# fraball = db.Column(db.Float)
-# fraptname = db.Column(db.String(255))
-# fraptregname = db.Column(db.String(255))
-# fraptareaname = db.Column(db.String(255))
-# frapttername = db.Column(db.String(255))
-# deutest = db.Column(db.String(255))
-# deuteststatus = db.Column(db.String(255))
-# deuball100 = db.Column(db.Float)
-# deuball12 = db.Column(db.Float)
-# deudpalevel = db.Column(db.String(255))
-# deuball = db.Column(db.Float)
-# deuptname = db.Column(db.String(255))
-# deuptregname = db.Column(db.String(255))
-# deuptareaname = db.Column(db.String(255))
-# deupttername = db.Column(db.String(255))
-# spatest = db.Column(db.String(255))
-# spateststatus = db.Column(db.String(255))
-# spaball100 = db.Column(db.Float)
-# spaball12 = db.Column(db.Float)
-# spadpalevel = db.Column(db.String(255))
-# spaball = db.Column(db.Float)
-# spaptname = db.Column(db.String(255))
-# spaptregname = db.Column(db.String(255))
-# spaptareaname = db.Column(db.String(255))
-# spapttername = db.Column(db.String(255))
-# year = db.Column(db.Integer)
+def open_conn(db_config):
+    """
+    Функция open_conn принимает на вход конфигурацию базы данных db_config и устанавливает соединение с базой данных PostgreSQL.
+    В случае неудачного подключения, функция повторяет попытку 3 раза с интервалом в 5 секунд между попытками.
+    Если после 3 попыток соединение не установлено, то генерируется исключение.
 
-def migrate_data():
+    Аргументы:
+
+    db_config (dict): словарь, содержащий параметры подключения к базе данных
+    Возвращаемое значение:
+
+    conn (psycopg2.extensions.connection): объект-соединение с базой данных
+    """
+    check = 3
+    while check != 0:
+        try:
+            conn = psycopg2.connect(
+                host=db_config['host'],
+                port=db_config['port'],
+                dbname=db_config['database'],
+                user=db_config['user'],
+                password=db_config['password']
+            )
+            break
+        except OperationalError:
+            print(f"Не удалось подключиться к базе данных {db_config['database']}. Попытка повторого подключения будет"
+                  f" выполнена еще {check} раз(а)")
+            time.sleep(5)
+            check -= 1
+            if check == 0:
+                raise
+    return conn
+
+
+def migrate_data(count_rows:int):
     res_zno_data = db.session.execute(
-        text(f'SELECT * FROM public.{os.getenv("RESULTS_TABLE_NAME")} ORDER BY outid ASC LIMIT 10000'))
+        text(f'SELECT * FROM {GENERAL_TABLE_NAME} ORDER BY outid ASC LIMIT {count_rows}'))
     columns = res_zno_data.keys()
     columns2 = ["OutID", "Birth", "SEXTYPENAME", "RegName", "AreaName", "TerName", "REGTYPENAME", "TerTypeName",
                 "ClassProfileName", "ClassLangName", "EOName", "EOTypeName", "EORegName", "EOAreaName", "EOTerName",
@@ -420,13 +322,102 @@ def migrate_data():
             logger.info(f'Migrated {count} lines')
 
 
+def execute_query(conn: psycopg2.extensions.connection, query: str, csv_name: str or None = None) -> None:
+    """
+    Выполняет SQL-запрос в базе данных PostgreSQL, используя соединение conn.
+    Результат запроса сохраняет в CSV-файл с именем filename и разделителем ','.
+
+    :param csv_name: путь и имя файла, в который нужно сохранить результат запроса в формате CSV
+    :type csv_name: str
+
+    :param conn: соединение с базой данных PostgreSQL
+    :type conn: psycopg2.extensions.connection
+
+    :param query: SQL-запрос, который нужно выполнить
+    :type query: str
+
+    :return: None
+    """
+    condition = csv_name is not None
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        if condition:
+            columns = [desc[0] for desc in cursor.description]  # Отримання назв стовпців
+            rows = cursor.fetchall()
+    logger.info('Запит успішно виконано! ')
+    if condition:
+        with open(csv_name, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(columns)  # Запис назв стовпців
+            writer.writerows(rows)
+        logger.info(f'Файл csv для запиту завдання – створено! Його можна перевірити за шляхом {csv_name}')
+
+
 if __name__ == '__main__':
     start_time = time.time()
     logger = init_logging()
+
+    conn = open_conn(DB_CONFIG)
+    CLEAN_QUERY = f"""
+    ALTER TABLE {GENERAL_TABLE_NAME}
+    DROP COLUMN IF EXISTS id;
+    """
+    TASK_QUERY1 = """
+    SELECT 
+    p."RegName",
+    ROUND(AVG(t."Ball")::NUMERIC, 2) AS average_score,
+    t."Year"
+FROM 
+    testings t
+    INNER JOIN participants p ON t."Part_ID" = p."ID"
+WHERE 
+    t."Ball" IS NOT NULL
+    AND
+    t."Ball"::text !~ '[^0-9.-]'
+    AND
+    t."TestStatus" = 'Зараховано'
+GROUP BY 
+    p."RegName",
+    t."Year";
+    """
+    TASK_QUERY2 = """
+        SELECT 
+        p."RegName",
+        ROUND(AVG(CASE WHEN t."Year" = 2019 THEN t."Ball" END)::NUMERIC, 2) AS average_score_2019,
+        ROUND(AVG(CASE WHEN t."Year" = 2020 THEN t."Ball" END)::NUMERIC, 2) AS average_score_2020
+    FROM 
+        testings t
+        INNER JOIN participants p ON t."Part_ID" = p."ID"
+    WHERE 
+        t."TestStatus" = 'Зараховано'
+        AND
+        t."Ball"::text !~ '[^0-9.-]'
+        AND
+        t."Ball" IS NOT NULL
+        AND
+        (t."Year" = 2019 OR t."Year" = 2020)
+    GROUP BY 
+        p."RegName";
+        """
+
+    execute_query(conn, CLEAN_QUERY)
+    logger.info("Підготовка до мігації - Виконано!")
+    conn.close()
+
+    logger.info("Розпочато міграцію...")
     with app.app_context():
         db.create_all()
-        migrate_data()
+        rows = 2000
+        migrate_data(count_rows=rows)
         # app.run(host='0.0.0.0')
+    logger.info(f"Міграцію {rows} рядків - Виконано!")
 
-    end_time = time.time()
-    logger.info("Program running time: %s seconds" % (end_time - start_time))
+    # conn = open_conn(DB_CONFIG)
+    logger.info("Виконується запит до завдання з варіантом 2")
+    execute_query(conn, TASK_QUERY1, 'results/result_variant_2.csv')
+
+    logger.info("Виконується запит до завдання з варіантом 2 у іншому форматі")
+    execute_query(conn, TASK_QUERY2, 'results/result_variant_2_type2.csv')
+    conn.close()
+
+    logger.info("Час виконання програми: %s секунд" % (time.time() - start_time))
