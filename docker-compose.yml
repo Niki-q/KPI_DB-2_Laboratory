@@ -54,8 +54,11 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
     volumes:
-      - ./migrate/migrate.py:/app/migrate.py
       - ./migrate/results:/app/results
+#      - for dev :
+      - ./migrate/migrate.py:/app/migrate.py
+      - ./migrate/models.py:/app/models.py
+      - ./migrate/migrations:/app/migrations
     depends_on:
       - db
     networks:
