@@ -63,12 +63,10 @@ def upgrade():
     sa.Column('Point_ID', sa.Integer(), nullable=True),
     sa.Column('Year', sa.Integer(), nullable=True),
     sa.Column('Test', sa.String(), nullable=True),
-    sa.Column('Lang', sa.String(), nullable=True),
     sa.Column('TestStatus', sa.String(), nullable=True),
     sa.Column('Ball100', sa.Float(), nullable=True),
     sa.Column('Ball12', sa.Float(), nullable=True),
     sa.Column('Ball', sa.Float(), nullable=True),
-    sa.Column('AdaptScale', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['Part_ID'], ['participants.ID'], ),
     sa.ForeignKeyConstraint(['Point_ID'], ['points_of_observation.ID'], ),
     sa.PrimaryKeyConstraint('ID')
