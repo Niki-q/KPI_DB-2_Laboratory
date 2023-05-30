@@ -14,8 +14,5 @@ RUN pip install -r requirements.txt
 # Copy application code into container
 COPY . /app/
 
-# Expose application port
-EXPOSE 8000
-
 # Start application
 CMD ["python", "app.py"]

@@ -18,11 +18,10 @@ services:
       - MY
 
   app:
+    profiles: ["csv"]
     build:
       context: ./app
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     environment:
       DB_HOST: db
       DB_PORT: ${DB_PORT}
@@ -33,11 +32,32 @@ services:
       OUTPUT_FILE_NAME: ${OUTPUT_FILE_NAME}
     volumes:
       - ./app/data:/app/data
-#      - ./app/app.py:/app/app.py
     depends_on:
       - db
 #      db:
 #        condition: service_healthy
+    networks:
+      - MY
+
+  app-migrate:
+    build:
+      context: ./migrate
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
+    volumes:
+      - ./migrate/results:/app/results
+#      - for dev :
+      - ./migrate/app.py:/app/app.py
+      - ./migrate/models.py:/app/models.py
+      - ./migrate/migrations:/app/migrations
+    depends_on:
+      - db
     networks:
       - MY
 
