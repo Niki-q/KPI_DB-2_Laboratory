@@ -220,8 +220,8 @@ def upgrade():
 
         print('testings')
         q_select = sa.select(*get_select(new_test_column_params, arg_return=True),
-                             Mpoints_of_observation.ID.label("Point_id"),
-                             Mparticipants.ID.label("Part_id")) \
+                             Mpoints_of_observation.ID.label("Point_ID"),
+                             Mparticipants.ID.label("Part_ID")) \
             .join(Mpoints_of_observation, boole[subject]) \
             .join(Mparticipants, Mparticipants.ID == ZNOResult.outid).distinct()
         fill_table(Mtestings, new_test_column_params, q_select)

@@ -71,7 +71,6 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-
 def init_logging():
     """
     Инициализирует журналирование (логирование) для текущего модуля с уровнем DEBUG.
