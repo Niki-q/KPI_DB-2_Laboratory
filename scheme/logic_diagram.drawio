@@ -1,0 +1,488 @@
+<mxfile host="app.diagrams.net" modified="2023-05-30T22:07:06.027Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 OPR/98.0.0.0" etag="yetWSqnfckaP3Nmv9g1r" version="21.3.6" type="device">
+  <diagram name="Страница 1" id="1fv0DpGZINGx8SVTAdfs">
+    <mxGraphModel dx="3605" dy="2305" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-112" value="Сутності" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-690" y="-345" width="140" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-113" value="participants" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-112" vertex="1">
+          <mxGeometry y="30" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-114" value="testings" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-112" vertex="1">
+          <mxGeometry y="60" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-115" value="points_of_observation" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-112" vertex="1">
+          <mxGeometry y="90" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-116" value="territories" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-112" vertex="1">
+          <mxGeometry y="120" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-117" value="educational_institutions" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-112" vertex="1">
+          <mxGeometry y="150" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-118" value="Зв&#39;язки:" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="-345" width="340" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-119" value="testing&amp;nbsp;пов&#39;язане з participant, який виконував дану дисципліну&amp;nbsp;(FK&amp;nbsp;participant_id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-118" vertex="1">
+          <mxGeometry y="30" width="340" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-120" value="testing&amp;nbsp;пов&#39;язане з&amp;nbsp;пунктом проведения point_of_observation (FK point_id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-118" vertex="1">
+          <mxGeometry y="70" width="340" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-121" value="participant&amp;nbsp;пов&#39;язане з territory, до якої він належить&amp;nbsp;(FK ter_id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-118" vertex="1">
+          <mxGeometry y="110" width="340" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-122" value="participant&amp;nbsp;пов&#39;язане з educational_institution, в якому пройшов навчання (FK eo_id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-118" vertex="1">
+          <mxGeometry y="150" width="340" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-123" value="testings ( інформація щодо складання окремого іспиту)" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;" parent="1" vertex="1">
+          <mxGeometry x="-240" y="50" width="340" height="295" as="geometry">
+            <mxRectangle x="540" y="240" width="370" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-124" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="30" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-125" value="PK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;" parent="hpMoTMzAT-e1M0hcOfhM-124" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-126" value="ID" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;" parent="hpMoTMzAT-e1M0hcOfhM-124" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-127" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="60" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-128" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-127" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-129" value="point_id ( id де учасник здавав один з предметів ЗНО  )" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-127" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-130" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="90" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-131" value="FK" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-130" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-132" value="participant_id ( id самого учасника )" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-130" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-133" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="120" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-134" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-133" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-135" value="year ( рік написання ЗНО )" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-133" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-136" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="150" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-137" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-136" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-138" value="Test ( назва предмету )" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-136" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-142" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="180" width="340" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-143" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-142" vertex="1">
+          <mxGeometry width="30" height="25" as="geometry">
+            <mxRectangle width="30" height="25" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-144" value="Ball (тестовий балл)" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-142" vertex="1">
+          <mxGeometry x="30" width="310" height="25" as="geometry">
+            <mxRectangle width="310" height="25" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-145" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="205" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-146" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-145" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-147" value="Ball12 ( оцінка по ДПА)" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-145" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-148" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="235" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-149" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-148" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-150" value="Ball100 ( оцінка  от 100 до 200)" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-148" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-151" value="" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-123" vertex="1">
+          <mxGeometry y="265" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-152" value="" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;" parent="hpMoTMzAT-e1M0hcOfhM-151" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-153" value="TestStatus ( Результат тесту)" style="shape=partialRectangle;overflow=hidden;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;" parent="hpMoTMzAT-e1M0hcOfhM-151" vertex="1">
+          <mxGeometry x="30" width="310" height="30" as="geometry">
+            <mxRectangle width="310" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-163" value="educational_institutions ( інформація&lt;br&gt;&amp;nbsp;щодо закладу в якому &lt;br&gt;учасник здобував освіту )" style="shape=table;startSize=50;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-520" y="360" width="260" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-164" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="50" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-165" value="PK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-164" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-166" value="ID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-164" vertex="1">
+          <mxGeometry x="30" width="230" height="30" as="geometry">
+            <mxRectangle width="230" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-167" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="80" width="260" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-168" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-167" vertex="1">
+          <mxGeometry width="30" height="35" as="geometry">
+            <mxRectangle width="30" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-169" value="TypeName (&amp;nbsp;Тип закладу освіти )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-167" vertex="1">
+          <mxGeometry x="30" width="230" height="35" as="geometry">
+            <mxRectangle width="230" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-170" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="115" width="260" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-171" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-170" vertex="1">
+          <mxGeometry width="30" height="35" as="geometry">
+            <mxRectangle width="30" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-172" value="RegName (Регіон, де розташований заклад освіти )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-170" vertex="1">
+          <mxGeometry x="30" width="230" height="35" as="geometry">
+            <mxRectangle width="230" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-173" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="150" width="260" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-174" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-173" vertex="1">
+          <mxGeometry width="30" height="35" as="geometry">
+            <mxRectangle width="30" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-175" value="AreaName (Район/Місто, де розташований заклад освіти )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-173" vertex="1">
+          <mxGeometry x="30" width="230" height="35" as="geometry">
+            <mxRectangle width="230" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-176" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="185" width="260" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-177" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-176" vertex="1">
+          <mxGeometry width="30" height="35" as="geometry">
+            <mxRectangle width="30" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-178" value="TerName (Населений пункт, де розташований заклад освіти )&lt;span style=&quot;border-color: var(--border-color); font-size: 14px; background-color: rgb(250, 250, 250); font-family: Roboto, -apple-system, &amp;quot;apple color emoji&amp;quot;, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif;&quot;&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/span&gt;" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-176" vertex="1">
+          <mxGeometry x="30" width="230" height="35" as="geometry">
+            <mxRectangle width="230" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-179" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="220" width="260" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-180" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-179" vertex="1">
+          <mxGeometry width="30" height="35" as="geometry">
+            <mxRectangle width="30" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-181" value="Parent (Орган, якому підпорядковується заклад освіти )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-179" vertex="1">
+          <mxGeometry x="30" width="230" height="35" as="geometry">
+            <mxRectangle width="230" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-182" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-163" vertex="1">
+          <mxGeometry y="255" width="260" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-183" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-182" vertex="1">
+          <mxGeometry width="30" height="35" as="geometry">
+            <mxRectangle width="30" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-184" value="Name (Назва закладу освіти учасника )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-182" vertex="1">
+          <mxGeometry x="30" width="230" height="35" as="geometry">
+            <mxRectangle width="230" height="35" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-185" value="points_of_observation ( інформація закладу&lt;br&gt;де учасник здає ЗНО )" style="shape=table;startSize=40;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-610" y="-120" width="280" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-186" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="hpMoTMzAT-e1M0hcOfhM-185" vertex="1">
+          <mxGeometry y="40" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-187" value="PK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-186" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-188" value="ID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-186" vertex="1">
+          <mxGeometry x="30" width="250" height="30" as="geometry">
+            <mxRectangle width="250" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-189" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-185" vertex="1">
+          <mxGeometry y="70" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-190" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-189" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-191" value="Name (Назва пункту проведення ЗНО)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-189" vertex="1">
+          <mxGeometry x="30" width="250" height="30" as="geometry">
+            <mxRectangle width="250" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-192" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-185" vertex="1">
+          <mxGeometry y="100" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-193" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-192" vertex="1">
+          <mxGeometry width="30" height="40" as="geometry">
+            <mxRectangle width="30" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-194" value="RegName (Регіон, де розташований пункт проведення ЗНО)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-192" vertex="1">
+          <mxGeometry x="30" width="250" height="40" as="geometry">
+            <mxRectangle width="250" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-195" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-185" vertex="1">
+          <mxGeometry y="140" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-196" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-195" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-197" value="AreaName (Район\Місто, де розташований пункт проведення ЗНО)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-195" vertex="1">
+          <mxGeometry x="30" width="250" height="30" as="geometry">
+            <mxRectangle width="250" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-198" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-185" vertex="1">
+          <mxGeometry y="170" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-199" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-198" vertex="1">
+          <mxGeometry width="30" height="50" as="geometry">
+            <mxRectangle width="30" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-200" value="TerName (Населений пункт, де розташований пункт проведення ЗНО)&lt;span style=&quot;border-color: var(--border-color); font-size: 14px; background-color: rgb(250, 250, 250); font-family: Roboto, -apple-system, &amp;quot;apple color emoji&amp;quot;, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif;&quot;&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/span&gt;" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-198" vertex="1">
+          <mxGeometry x="30" width="250" height="50" as="geometry">
+            <mxRectangle width="250" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-201" value="participants ( інформація стосовно учасника )" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-880" y="110" width="300" height="288" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-202" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="30" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-203" value="PK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-202" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-204" value="ID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-202" vertex="1">
+          <mxGeometry x="30" width="270" height="30" as="geometry">
+            <mxRectangle width="270" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-205" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="60" width="300" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-206" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-205" vertex="1">
+          <mxGeometry width="30" height="36" as="geometry">
+            <mxRectangle width="30" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-207" value="RegName (Регіон реєстраці / проживання учасника)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-205" vertex="1">
+          <mxGeometry x="30" width="270" height="36" as="geometry">
+            <mxRectangle width="270" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-208" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="96" width="300" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-209" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-208" vertex="1">
+          <mxGeometry width="30" height="36" as="geometry">
+            <mxRectangle width="30" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-210" value="AreaName (Район/Місто реєстрації/проживання учасника&amp;nbsp;" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-208" vertex="1">
+          <mxGeometry x="30" width="270" height="36" as="geometry">
+            <mxRectangle width="270" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-211" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="132" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-212" value="FK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-211" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-213" value="TER_id (id території до якої належить учасник)&lt;span style=&quot;border-color: var(--border-color); font-size: 14px; background-color: rgb(250, 250, 250); font-family: Roboto, -apple-system, &amp;quot;apple color emoji&amp;quot;, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif;&quot;&gt;&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&lt;/span&gt;" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-211" vertex="1">
+          <mxGeometry x="30" width="270" height="30" as="geometry">
+            <mxRectangle width="270" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-214" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="162" width="300" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-215" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-214" vertex="1">
+          <mxGeometry width="30" height="36" as="geometry">
+            <mxRectangle width="30" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-216" value="ClassProfileName (Профіль навчання учасника/ОКР)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-214" vertex="1">
+          <mxGeometry x="30" width="270" height="36" as="geometry">
+            <mxRectangle width="270" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-217" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="198" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-218" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-217" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-219" value="ClassLangName (мова навчання учасника )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-217" vertex="1">
+          <mxGeometry x="30" width="270" height="30" as="geometry">
+            <mxRectangle width="270" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-220" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="228" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-221" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-220" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-222" value="Birth (Рік народження)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-220" vertex="1">
+          <mxGeometry x="30" width="270" height="30" as="geometry">
+            <mxRectangle width="270" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-223" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-201" vertex="1">
+          <mxGeometry y="258" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-224" value="FK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-223" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-225" value="EO_id (id закладу де учасник здобував освіту )" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-223" vertex="1">
+          <mxGeometry x="30" width="270" height="30" as="geometry">
+            <mxRectangle width="270" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-229" value="territories ( території до яких &lt;br&gt;відносяться учасники та їх типи&amp;nbsp;)" style="shape=table;startSize=35;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="-500" y="175" width="220" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-230" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" parent="hpMoTMzAT-e1M0hcOfhM-229" vertex="1">
+          <mxGeometry y="35" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-231" value="PK" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;fontStyle=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-230" vertex="1">
+          <mxGeometry width="30" height="30" as="geometry">
+            <mxRectangle width="30" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-232" value="ID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;fontStyle=5;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-230" vertex="1">
+          <mxGeometry x="30" width="190" height="30" as="geometry">
+            <mxRectangle width="190" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-233" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-229" vertex="1">
+          <mxGeometry y="65" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-234" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-233" vertex="1">
+          <mxGeometry width="30" height="50" as="geometry">
+            <mxRectangle width="30" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-235" value="Name (Назва населеного пункту реєстрації/проживання учасника)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-233" vertex="1">
+          <mxGeometry x="30" width="190" height="50" as="geometry">
+            <mxRectangle width="190" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-236" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;" parent="hpMoTMzAT-e1M0hcOfhM-229" vertex="1">
+          <mxGeometry y="115" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-237" value="" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;editable=1;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-236" vertex="1">
+          <mxGeometry width="30" height="40" as="geometry">
+            <mxRectangle width="30" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-238" value="TypeName (Тип території)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="hpMoTMzAT-e1M0hcOfhM-236" vertex="1">
+          <mxGeometry x="30" width="190" height="40" as="geometry">
+            <mxRectangle width="190" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-239" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="hpMoTMzAT-e1M0hcOfhM-223" target="hpMoTMzAT-e1M0hcOfhM-164" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-240" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="hpMoTMzAT-e1M0hcOfhM-211" target="hpMoTMzAT-e1M0hcOfhM-230" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-241" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="hpMoTMzAT-e1M0hcOfhM-127" target="hpMoTMzAT-e1M0hcOfhM-186" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hpMoTMzAT-e1M0hcOfhM-242" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="hpMoTMzAT-e1M0hcOfhM-130" target="hpMoTMzAT-e1M0hcOfhM-202" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
