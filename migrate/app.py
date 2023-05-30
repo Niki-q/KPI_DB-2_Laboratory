@@ -8,6 +8,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import OperationalError
+import subprocess
 
 GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
 OUT_CSV_FILE = os.getenv("OUTPUT_FILE_NAME")
@@ -149,34 +150,12 @@ if __name__ == '__main__':
     start_time = time.time()
     logger = init_logging()
 
-    import subprocess
-
-    from subprocess import Popen, PIPE, STDOUT, CalledProcessError
     def run_flask_db_upgrade():
-        # Команда для выполнения
-            command = 'flask db downgrade'
-            subprocess.call(command, shell=True)
-            subprocess.call(command, shell=True)
-            command = 'flask db upgrade'
-            subprocess.call(command, shell=True)
-
+        command = 'flask db upgrade'
+        subprocess.call(command, shell=True)
 
     logger.info("Розпочато міграцію...")
-    # Вызов функции для выполнения команды flask db upgrade
     run_flask_db_upgrade()
-
-    # app = Flask(__name__)
-    #
-    # app.config['SQLALCHEMY_DATABASE_URI'] = SQLA_CONFIG_STR
-    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    #
-    # db = SQLAlchemy(app)
-
-
-    # migrate = Migrate(app, db)
-
-    # залишаємо запуск веб додатка для наступної лабораторної
-    # app.run(host='0.0.0.0')
 
     conn = open_conn(DB_CONFIG)
     logger.info("Виконується запит до завдання з варіантом 2")

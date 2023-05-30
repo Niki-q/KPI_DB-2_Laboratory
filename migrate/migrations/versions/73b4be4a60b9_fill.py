@@ -8,15 +8,10 @@ Create Date: 2023-05-29 01:26:51.362837
 import logging
 import os
 import time
-import uuid
-
-import sqlalchemy
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer, String, and_, union_all, union, or_
+from sqlalchemy import and_, union
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects import postgresql
-from sqlalchemy.dialects.postgresql import insert
 
 # revision identifiers, used by Alembic.
 revision = '73b4be4a60b9'
@@ -25,60 +20,33 @@ branch_labels = None
 depends_on = None
 
 
-def init_logging():
-    """
-    Инициализирует журналирование (логирование) для текущего модуля с уровнем DEBUG.
-
-    Возвращает:
-    Экземпляр логгера для текущего модуля.
-    """
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s - %(levelname)s - %(message)s',
-                        handlers=[
-                            logging.StreamHandler(),  # Обработчик для вывода в консоль
-                            logging.FileHandler('migration.log')  # Обработчик для вывода в файл
-                        ])
-
-    return logging.getLogger(__name__)
-
-
 def upgrade():
     GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
     start_time = time.time()
-    # logger = init_logging()
     logger = logging.getLogger('alembic.env')
 
     db = SQLAlchemy()
-    ### Data migration
+
     metadata = sa.MetaData()
     metadata.reflect(bind=op.get_bind())
 
-    def generate_unique_id():
-        return str(uuid.uuid4())
-
     class ZNOResult(db.Model):
         __table__ = metadata.tables[GENERAL_TABLE_NAME]
-        # outid = Column(Integer, primary_key=True)  # Определение первичного ключа
 
     class Meducational_institutions(db.Model):
         __table__ = metadata.tables["educational_institutions"]
-        # id = Column(Integer, primary_key=True)  # Определение первичного ключа
 
     class Mteritory(db.Model):
         __table__ = metadata.tables["territories"]
-        # id = Column(Integer, primary_key=True)  # Определение первичного ключа
 
     class Mparticipants(db.Model):
         __table__ = metadata.tables["participants"]
-        # id = Column(Integer, primary_key=True)  # Определение первичного ключа
 
     class Mpoints_of_observation(db.Model):
         __table__ = metadata.tables["points_of_observation"]
-        # id = Column(Integer, primary_key=True)  # Определение первичного ключа
 
     class Mtestings(db.Model):
         __table__ = metadata.tables["testings"]
-        # id = Column(Integer, primary_key=True)  # Определение первичного ключа
 
     def get_select(param, arg_return=False):
         args = []
@@ -97,18 +65,18 @@ def upgrade():
             logger.info(f"Migrating {Model.__table__} [~ {i * 100000}]")
             op.bulk_insert(Model.__table__, list(map(dict, p)))
 
+    logger.info("Initialization fill tables...")
     # teritory
     logger.info("Migrating Territory")
     column_params = [('tername', 'Name'), ('tertypename', 'TypeName')]
     fill_table(Mteritory, column_params)
 
-
     # educational_institutions
     logger.info("Migrating educational_institutions")
-    column_params = [('eotypename', 'TypeName'), ('eoregname', 'RegName'), ('eoareaname', 'AreaName'),
-                     ('eotername', 'TerName'), ('eoparent', 'Parent'), ('eoname', 'Name')]
+    column_params = [('eoname', 'Name'), ('eotypename', 'TypeName'), ('eoregname', 'RegName'),
+                     ('eoareaname', 'AreaName'),
+                     ('eotername', 'TerName'), ('eoparent', 'Parent')]
     fill_table(Meducational_institutions, column_params)
-
 
     # participants
     logger.info("Migrating participants")
@@ -120,9 +88,10 @@ def upgrade():
                          Meducational_institutions.ID.label("EO_id")) \
         .join(Mteritory, Mteritory.Name == ZNOResult.tername) \
         .join(Meducational_institutions, and_(Meducational_institutions.Name == ZNOResult.eoname,
-                                              Meducational_institutions.Parent == ZNOResult.eoparent)).distinct()
+                                              Meducational_institutions.Parent == ZNOResult.eoparent,
+                                              Meducational_institutions.TerName == ZNOResult.eotername,
+                                              Meducational_institutions.TypeName == ZNOResult.eotypename)).distinct()
     fill_table(Mparticipants, column_params, q_select)
-
 
     # testings and points_of_observation
     logger.info("Migrating Points of observation")
@@ -165,35 +134,21 @@ def upgrade():
         lang_subjects = ['fra', 'deu', 'spa', 'eng']
         other_subjects = ["math", "hist", "phys", "chem", "bio", "geo"]
 
-        other_test = []
-        lang_test = []
-
         pt_list = []
 
-        columns = ['Test', 'Lang', 'TestStatus', 'Ball', 'Ball12', 'Ball100', 'AdaptScale']
         pt_columns = ['PTName', 'PTRegName', 'PTAreaName', 'PTTerName']
 
         for subject in other_subjects:
-            other_test.append(get_select(get_subject_column_params(subject, columns), arg_return=True))
             pt_list.append(get_select(get_subject_column_params(subject, pt_columns)))
 
         for subject in lang_subjects:
-            lang_test.append(get_select(get_subject_column_params(subject, columns), arg_return=True))
             pt_list.append(get_select(get_subject_column_params(subject, pt_columns)))
 
         pt_list.append(get_select(get_subject_column_params('ukr', pt_columns)))
 
-        return {'test': {
-            'other': (other_test),
-            'lang': (lang_test),
-            'ukr': get_select(get_subject_column_params('ukr', columns), arg_return=True)},
-            'pt': union(*pt_list)
-        }
+        return union(*pt_list)
 
-    test_query = get_test_select()
-
-    fill_table(Mpoints_of_observation, [], query=test_query['pt'])
-
+    fill_table(Mpoints_of_observation, [], query=get_test_select())
 
     logger.info("Migrating Testings")
 
@@ -212,9 +167,9 @@ def upgrade():
             .join(Mparticipants, Mparticipants.ID == ZNOResult.outid).distinct()
         fill_table(Mtestings, new_test_column_params, q_select)
 
-
     fin_time = time.time() - start_time
     logger.info(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
+
 
 def downgrade():
     op.drop_table('testings')

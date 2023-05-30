@@ -18,7 +18,7 @@ services:
       - MY
 
   app:
-    profiles: ["fill"]
+    profiles: ["csv"]
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -32,7 +32,6 @@ services:
       OUTPUT_FILE_NAME: ${OUTPUT_FILE_NAME}
     volumes:
       - ./app/data:/app/data
-#      - ./app/app.py:/app/app.py
     depends_on:
       - db
 #      db:
@@ -44,8 +43,6 @@ services:
     build:
       context: ./migrate
       dockerfile: Dockerfile
-#    ports:
-#      - "5000:5000"
     environment:
       DB_HOST: db
       DB_PORT: ${DB_PORT}
@@ -63,11 +60,6 @@ services:
       - db
     networks:
       - MY
-
-#  web:
-#    ports:
-#      - "8000:8000"
-
 
   pgadmin:
     image: dpage/pgadmin4
