@@ -32,14 +32,22 @@ def init_logging():
     Возвращает:
     Экземпляр логгера для текущего модуля.
     """
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        handlers=[
+                            logging.StreamHandler(),  # Обработчик для вывода в консоль
+                            logging.FileHandler('migration.log')  # Обработчик для вывода в файл
+                        ])
+
     return logging.getLogger(__name__)
 
 
 def upgrade():
     GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
     start_time = time.time()
-    logger = init_logging()
+    # logger = init_logging()
+    logger = logging.getLogger('alembic.env')
+
     db = SQLAlchemy()
     ### Data migration
     metadata = sa.MetaData()
@@ -90,24 +98,20 @@ def upgrade():
             op.bulk_insert(Model.__table__, list(map(dict, p)))
 
     # teritory
-    print("Migrating Territory")
+    logger.info("Migrating Territory")
     column_params = [('tername', 'Name'), ('tertypename', 'TypeName')]
     fill_table(Mteritory, column_params)
 
-    fin_time = time.time() - start_time
-    print(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
 
     # educational_institutions
-    print("Migrating educational_institutions")
+    logger.info("Migrating educational_institutions")
     column_params = [('eotypename', 'TypeName'), ('eoregname', 'RegName'), ('eoareaname', 'AreaName'),
                      ('eotername', 'TerName'), ('eoparent', 'Parent'), ('eoname', 'Name')]
     fill_table(Meducational_institutions, column_params)
 
-    fin_time = time.time() - start_time
-    print(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
 
     # participants
-    print("Migrating participants")
+    logger.info("Migrating participants")
     column_params = [('outid', 'ID'), ('birth', 'Birth'), ('sextypename', 'SexTypeName'), ('areaname', 'AreaName'),
                      ('regname', 'RegName'), ('classprofilename', 'ClassProfileName'),
                      ('classlangname', 'ClassLangName')]
@@ -119,15 +123,12 @@ def upgrade():
                                               Meducational_institutions.Parent == ZNOResult.eoparent)).distinct()
     fill_table(Mparticipants, column_params, q_select)
 
-    fin_time = time.time() - start_time
-    print(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
 
     # testings and points_of_observation
+    logger.info("Migrating Points of observation")
 
     test_column_params = [('test', 'Test'), ('teststatus', 'TestStatus'),
                           ('ball100', 'Ball100'), ('ball12', 'Ball12'), ('ball', 'Ball')]
-    pt_column_params = [('ptname', 'Name'), ('ptregname', 'RegName'),
-                        ('ptareaname', 'AreaName'), ('pttername', 'TerName')]
     subjects = ['ukr', 'fra', 'deu', 'spa', 'eng', "math", "hist", "phys", "chem", "bio", "geo"]
 
     boole = {'ukr': Mpoints_of_observation.Name == ZNOResult.ukrptname,
@@ -190,35 +191,20 @@ def upgrade():
         }
 
     test_query = get_test_select()
-    #
-    # print(*test_query['test']['ukr'])
-    # #
-    # print(test_query['test']['lang'])
-    #
-    # print(test_query['test']['other'])
-
-    # print(test_query['pt'])
-
-    # points of observation
 
     fill_table(Mpoints_of_observation, [], query=test_query['pt'])
 
-    fin_time = time.time() - start_time
-    print(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
+
+    logger.info("Migrating Testings")
 
     for subject in subjects:
-        q_select = []
-        new_pt_column_params = []
         new_test_column_params = []
         for old_name, new_name in test_column_params:
             new_test_column_params.append((f"{subject}{old_name}", new_name))
-        for old_name, new_name in pt_column_params:
-            new_pt_column_params.append((f"{subject}{old_name}", new_name))
         new_test_column_params.append(('year', 'Year'))
 
-        print(f'Filling subject - {subject}')
+        logger.info(f'Filling subject - {subject}')
 
-        print('testings')
         q_select = sa.select(*get_select(new_test_column_params, arg_return=True),
                              Mpoints_of_observation.ID.label("Point_ID"),
                              Mparticipants.ID.label("Part_ID")) \
@@ -226,42 +212,9 @@ def upgrade():
             .join(Mparticipants, Mparticipants.ID == ZNOResult.outid).distinct()
         fill_table(Mtestings, new_test_column_params, q_select)
 
-    ## print(q_select)
-    # fill_table(Mtestings, [], q_select)
-    #
-    # subjects = [
-    #     ZNOResult.ukrptname,
-    #     ZNOResult.mathptname,
-    #     ZNOResult.histptname,
-    #     ZNOResult.engptname,
-    #     ZNOResult.physptname,
-    #     ZNOResult.chemptname,
-    #     ZNOResult.bioptname,
-    #     ZNOResult.geoptname,
-    #     ZNOResult.spaptname,
-    #     ZNOResult.fraptname,
-    #     ZNOResult.deuptname
-    # ]
-    #
-    #
-    # for format in test_query['test']:
-    #     args = test_query['test'][format]
-    #    q_select = sa.select(*args,
-    #                         Mparticipants.ID.label("Part_id"),
-    #                         Mpoints_of_observation.ID.label("Point_id")) \
-    #        .join(Mparticipants, Mparticipants.ID == ZNOResult.outid) \
-    #        .join(Mpoints_of_observation, Mpoints_of_observation.Name.in_(subjects)).distinct()
-    #
-    #     print(q_select)
-    #     # fill_table(Mparticipants, [], q_select)
-    #
-    #     fin_time = time.time() - start_time
-    #     print(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
 
-    input()
-
-    # raise Exception
-
+    fin_time = time.time() - start_time
+    logger.info(f"Migrated: {fin_time} seconds ({round(fin_time / 60, 2)} minutes) ")
 
 def downgrade():
     op.drop_table('testings')

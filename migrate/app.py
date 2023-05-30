@@ -149,6 +149,22 @@ if __name__ == '__main__':
     start_time = time.time()
     logger = init_logging()
 
+    import subprocess
+
+    from subprocess import Popen, PIPE, STDOUT, CalledProcessError
+    def run_flask_db_upgrade():
+        # Команда для выполнения
+            command = 'flask db downgrade'
+            subprocess.call(command, shell=True)
+            subprocess.call(command, shell=True)
+            command = 'flask db upgrade'
+            subprocess.call(command, shell=True)
+
+
+    logger.info("Розпочато міграцію...")
+    # Вызов функции для выполнения команды flask db upgrade
+    run_flask_db_upgrade()
+
     # app = Flask(__name__)
     #
     # app.config['SQLALCHEMY_DATABASE_URI'] = SQLA_CONFIG_STR
@@ -156,20 +172,19 @@ if __name__ == '__main__':
     #
     # db = SQLAlchemy(app)
 
-    logger.info("Розпочато міграцію...")
 
     # migrate = Migrate(app, db)
 
     # залишаємо запуск веб додатка для наступної лабораторної
     # app.run(host='0.0.0.0')
-    time.sleep(1000)
-    # conn = open_conn(DB_CONFIG)
-    # logger.info("Виконується запит до завдання з варіантом 2")
-    # execute_query(conn, TASK_QUERY[0], 'results/result_variant_2.csv')
-    #
-    # logger.info("Виконується запит до завдання з варіантом 2 у іншому форматі")
-    # execute_query(conn, TASK_QUERY[1], 'results/result_variant_2_type2.csv')
-    # conn.close()
+
+    conn = open_conn(DB_CONFIG)
+    logger.info("Виконується запит до завдання з варіантом 2")
+    execute_query(conn, TASK_QUERY[0], 'results/result_variant_2.csv')
+
+    logger.info("Виконується запит до завдання з варіантом 2 у іншому форматі")
+    execute_query(conn, TASK_QUERY[1], 'results/result_variant_2_type2.csv')
+    conn.close()
 
     fin_time = time.time() - start_time
     logger.info(f"Час виконання програми: {fin_time} секунд ({round(fin_time / 60, 2)} хвилин) ")
