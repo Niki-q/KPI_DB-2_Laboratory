@@ -17,4 +17,4 @@ COPY . /app/
 EXPOSE 5000
 
 # Определяем команду для запуска приложения
-CMD ["python", "migrate.py"]
+CMD ["python", "app.py"]

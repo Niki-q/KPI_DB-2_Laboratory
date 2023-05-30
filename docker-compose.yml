@@ -56,7 +56,7 @@ services:
     volumes:
       - ./migrate/results:/app/results
 #      - for dev :
-      - ./migrate/migrate.py:/app/migrate.py
+      - ./migrate/app.py:/app/app.py
       - ./migrate/models.py:/app/models.py
       - ./migrate/migrations:/app/migrations
     depends_on:

@@ -6,8 +6,8 @@ import time
 import psycopg2
 from flask import Flask
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import OperationalError
-from sqlalchemy import text
 
 GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
 OUT_CSV_FILE = os.getenv("OUTPUT_FILE_NAME")
@@ -56,6 +56,20 @@ GROUP BY
     GROUP BY 
         p."RegName";
         """]
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLA_CONFIG_STR
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy()
+
+from models import *
+
+db.init_app(app)
+
+migrate = Migrate(app, db)
+
 
 
 def init_logging():
@@ -136,27 +150,27 @@ if __name__ == '__main__':
     start_time = time.time()
     logger = init_logging()
 
-    app = Flask(__name__)
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = SQLA_CONFIG_STR
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    db = SQLAlchemy(app)
+    # app = Flask(__name__)
+    #
+    # app.config['SQLALCHEMY_DATABASE_URI'] = SQLA_CONFIG_STR
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    #
+    # db = SQLAlchemy(app)
 
     logger.info("Розпочато міграцію...")
 
-    migrate = Migrate(app, db)
+    # migrate = Migrate(app, db)
 
     # залишаємо запуск веб додатка для наступної лабораторної
     # app.run(host='0.0.0.0')
-
-    conn = open_conn(DB_CONFIG)
-    logger.info("Виконується запит до завдання з варіантом 2")
-    execute_query(conn, TASK_QUERY[0], 'results/result_variant_2.csv')
-
-    logger.info("Виконується запит до завдання з варіантом 2 у іншому форматі")
-    execute_query(conn, TASK_QUERY[1], 'results/result_variant_2_type2.csv')
-    conn.close()
+    time.sleep(1000)
+    # conn = open_conn(DB_CONFIG)
+    # logger.info("Виконується запит до завдання з варіантом 2")
+    # execute_query(conn, TASK_QUERY[0], 'results/result_variant_2.csv')
+    #
+    # logger.info("Виконується запит до завдання з варіантом 2 у іншому форматі")
+    # execute_query(conn, TASK_QUERY[1], 'results/result_variant_2_type2.csv')
+    # conn.close()
 
     fin_time = time.time() - start_time
     logger.info(f"Час виконання програми: {fin_time} секунд ({round(fin_time / 60, 2)} хвилин) ")
