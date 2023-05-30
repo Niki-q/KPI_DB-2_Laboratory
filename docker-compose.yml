@@ -18,11 +18,10 @@ services:
       - MY
 
   app:
+    profiles: ["fill"]
     build:
       context: ./app
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     environment:
       DB_HOST: db
       DB_PORT: ${DB_PORT}
@@ -41,6 +40,35 @@ services:
     networks:
       - MY
 
+  app-migrate:
+    build:
+      context: ./migrate
+      dockerfile: Dockerfile
+#    ports:
+#      - "5000:5000"
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
+    volumes:
+      - ./migrate/results:/app/results
+#      - for dev :
+      - ./migrate/app.py:/app/app.py
+      - ./migrate/models.py:/app/models.py
+      - ./migrate/migrations:/app/migrations
+    depends_on:
+      - db
+    networks:
+      - MY
+
+#  web:
+#    ports:
+#      - "8000:8000"
+
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -48,6 +76,26 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - "80:80"
+    depends_on:
+      - db
+    networks:
+      - MY
+
+  web_app:
+    build:
+      context: ./web_app
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
+#    volumes:
+#      - ./web_app:/app
     depends_on:
       - db
     networks:
