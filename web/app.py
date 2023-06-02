@@ -23,8 +23,8 @@ SQLA_CONFIG_STR = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB
 
 app = Flask(__name__, template_folder='templates')
 
-redis_host = 'localhost'
-redis_port = 5000
+redis_host = os.getenv("REDIS_HOST")
+redis_port = 6379
 
 redis_client = redis.Redis(host=redis_host, port=redis_port)
 
