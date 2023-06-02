@@ -1,8 +1,7 @@
 import uuid
-
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 
-# from app import app
 
 db = SQLAlchemy()
 
@@ -16,6 +15,7 @@ class EducationalInstitution(db.Model):
     TerName = db.Column(db.String)
     Parent = db.Column(db.String)
     Name = db.Column(db.String)
+    participants = relationship("Participant", cascade="delete")
 
 
 class Participant(db.Model):
@@ -30,24 +30,26 @@ class Participant(db.Model):
     ClassProfileName = db.Column(db.String)
     ClassLangName = db.Column(db.String)
     EO_id = db.Column(db.Integer, db.ForeignKey('educational_institutions.ID'))
+    testings = relationship("Testing", cascade="delete")
 
 
 class Territory(db.Model):
     __tablename__ = 'territories'
 
-    ID = db.Column(db.Integer, primary_key=True,  autoincrement=True)
+    ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Name = db.Column(db.String)
     TypeName = db.Column(db.String)
+    participants = relationship("Participant", cascade="delete")
 
 
 class PointOfObservation(db.Model):
     __tablename__ = 'points_of_observation'
-    ID = db.Column(db.Integer, primary_key=True,  autoincrement=True)
+    ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Name = db.Column(db.String)
     RegName = db.Column(db.String)
     AreaName = db.Column(db.String)
     TerName = db.Column(db.String)
-
+    testings = relationship("Testing", cascade="delete")
 
 class Testing(db.Model):
     __tablename__ = 'testings'
@@ -60,3 +62,4 @@ class Testing(db.Model):
     Ball100 = db.Column(db.Float)
     Ball12 = db.Column(db.Float)
     Ball = db.Column(db.Float)
+    participants = relationship("Participant", cascade="delete")
