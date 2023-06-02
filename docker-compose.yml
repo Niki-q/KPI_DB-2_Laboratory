@@ -76,11 +76,11 @@ services:
     restart: always
     ports:
       - "5000:5000"
-    volumes:
+#    volumes:
       #      - for dev :
-      - ./web/app.py:/web/app.py
-      - ./web/models.py:/web/models.py
-      - ./web/templates:/app/templates
+#      - ./web/app.py:/app/app.py
+#      - ./web/models.py:/app/models.py
+#      - ./web/templates:/app/templates
     depends_on:
       - db
     networks:
