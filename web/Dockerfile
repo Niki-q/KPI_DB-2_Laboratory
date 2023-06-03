@@ -14,5 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем остальные файлы приложения в контейнер
 COPY . /app/
 
+EXPOSE 5000
+
 # Определяем команду для запуска приложения
 CMD ["python", "app.py"]
