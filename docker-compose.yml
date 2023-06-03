@@ -40,6 +40,7 @@ services:
       - MY
 
   app-migrate:
+    profiles: ["migrate"]
     build:
       context: ./migrate
       dockerfile: Dockerfile
@@ -60,6 +61,39 @@ services:
       - db
     networks:
       - MY
+
+  web-app:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
+      REDIS_HOST: redis
+    restart: always
+    ports:
+      - "5000:5000"
+#    volumes:
+      #      - for dev :
+#      - ./web/app.py:/app/app.py
+#      - ./web/models.py:/app/models.py
+#      - ./web/templates:/app/templates
+    depends_on:
+      - db
+    networks:
+      - MY
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    networks:
+      - MY
+#    volumes:
+#      - ./redis-data:/data
 
   pgadmin:
     image: dpage/pgadmin4
