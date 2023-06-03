@@ -26,7 +26,7 @@ app = Flask(__name__, template_folder='templates')
 redis_host = os.getenv("REDIS_HOST")
 redis_port = 6379
 
-redis_client = redis.Redis(host=redis_host, port=redis_port)
+redis_client = redis.Redis(host=redis_host, port=redis_port, password=None)
 
 app.config['CACHE_TYPE'] = 'redis'
 app.config['CACHE_REDIS_HOST'] = redis_host

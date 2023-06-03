@@ -90,8 +90,10 @@ services:
     image: redis:latest
     ports:
       - '6379:6379'
-    volumes:
-      - ./redis-data:/data
+    networks:
+      - MY
+#    volumes:
+#      - ./redis-data:/data
 
   pgadmin:
     image: dpage/pgadmin4
