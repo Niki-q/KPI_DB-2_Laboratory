@@ -33,6 +33,7 @@ app.config['CACHE_TYPE'] = 'redis'
 app.config['CACHE_REDIS_HOST'] = redis_host
 app.config['CACHE_REDIS_PORT'] = redis_port
 
+
 def init_logging():
     """
     Инициализирует журналирование (логирование) для текущего модуля с уровнем DEBUG.
@@ -251,6 +252,7 @@ def get_distinct_values(table_name, column_name):
 
     return distinct_values
 
+
 @app.route('/add_rows', methods=['POST'])
 def add_rows():
     table_name = request.form['table_name']
@@ -260,7 +262,8 @@ def add_rows():
     row = model_class(**updated_data)  # Створення нового об'єкта рядка
     db.session.add(row)  # Додавання рядка до сесії ORM
     db.session.commit()
-    return "42"
+    return redirect('/main')
+
 
 @app.route('/upgate_row', methods=['POST'])
 def upgate_row():
@@ -274,14 +277,12 @@ def upgate_row():
     result = {}
     special_colum = []
     for i in column_names:
-        temp = get_distinct_values(table_name,i)
-        if len(temp)<=25:
-            result[i]=[temp]
+        temp = get_distinct_values(table_name, i)
+        if len(temp) <= 25:
+            result[i] = [temp]
             special_colum.append(i)
-    print(result)
-    res=get_distinct_values(table_name,column_names[1])
-    print(special_colum)
-    return render_template('add_row.html', selected_table=table_name, columns=column_names, special_colum=special_colum, result=result)
+    return render_template('add_row.html', selected_table=table_name, columns=column_names, special_colum=special_colum,
+                           result=result)
 
 
 @app.route('/upgrade', methods=['POST'])
@@ -332,8 +333,6 @@ def search():
 
     return render_template('site.html', table_data=table_data, table_name=table_search, column_names=column_names,
                            search_data=[table_search, column_search, value_search], limit=10)
-
-
 
 
 @app.route('/get_columns', methods=['POST'])
