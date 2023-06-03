@@ -7,8 +7,9 @@ import psycopg2
 from flask import Flask, redirect, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import OperationalError
-from sqlalchemy import func
+from sqlalchemy import func, distinct
 import redis
+from flask import jsonify
 
 GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
 OUT_CSV_FILE = os.getenv("OUTPUT_FILE_NAME")
@@ -122,7 +123,7 @@ def execute_query():
 
     arguments = {'selected_reg_name': reg_name, 'selected_test_name': test_name, 'selected_year': year}
 
-    key = str(reg_name) + str(test_name) + str(year)
+    key = reg_name + test_name + year
 
     # Отримання унікальних років з бази даних
     year_options = [str(y[0]) for y in db.session.query(Testing.Year).distinct().all()]
@@ -217,7 +218,6 @@ def update_row():
     updated_data = {column: request.form.get(column) for column in request.form if
                     column != 'table_name' and column != 'row_id'}
 
-    # Отримати клас моделі для відповідної таблиці
     model_class = get_model_class(table_name)
 
     if model_class is None:
@@ -245,11 +245,43 @@ def add_row():
     return render_template('add_row.html')
 
 
-@app.route('/add_to_select_table', methods=['POST'])
-def table_select():
+def get_distinct_values(table_name, column_name):
+    YourTableName = get_table_model(table_name)
+    distinct_values = db.session.query(distinct(getattr(YourTableName, column_name)).label('count')).all()
+
+    return distinct_values
+
+@app.route('/add_rows', methods=['POST'])
+def add_rows():
+    table_name = request.form['table_name']
+    updated_data = {column: request.form.get(column) for column in request.form if
+                    column != 'table_name' and column != 'row_id'}
+    model_class = get_model_class(table_name)
+    row = model_class(**updated_data)  # Створення нового об'єкта рядка
+    db.session.add(row)  # Додавання рядка до сесії ORM
+    db.session.commit()
+    return "42"
+
+@app.route('/upgate_row', methods=['POST'])
+def upgate_row():
     table_name = request.form['table-select']
     column_names, table_data = get_table_data(table_name, 1)
-    return render_template('add_row.html', selected_table=table_name, columns=column_names)
+    excluded_column = ['ID']
+
+    for column in excluded_column:
+        if column in column_names:
+            column_names.remove(column)
+    result = {}
+    special_colum = []
+    for i in column_names:
+        temp = get_distinct_values(table_name,i)
+        if len(temp)<=25:
+            result[i]=[temp]
+            special_colum.append(i)
+    print(result)
+    res=get_distinct_values(table_name,column_names[1])
+    print(special_colum)
+    return render_template('add_row.html', selected_table=table_name, columns=column_names, special_colum=special_colum, result=result)
 
 
 @app.route('/upgrade', methods=['POST'])
@@ -302,19 +334,6 @@ def search():
                            search_data=[table_search, column_search, value_search], limit=10)
 
 
-@app.route('/find_by_id', methods=['POST'])
-def find_by_id():
-    table_name = request.form['table_name']
-    row_id = request.form['row_id']
-    table_model = get_table_model(table_name)
-    row = table_model.query.get(row_id)
-    column_names = [column.key for column in row.__table__.columns]
-    table_data = [row]
-
-    return render_template('site.html', column_names=column_names, table_data=table_data, table_name=table_name)
-
-
-from flask import jsonify
 
 
 @app.route('/get_columns', methods=['POST'])
