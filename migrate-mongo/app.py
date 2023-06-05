@@ -62,6 +62,7 @@ class PointOfObservation(db.Model):
     TerName = db.Column(db.String)
     testings = db.relationship("Testing", cascade="delete")
 
+mongo_client.drop_database(mongo_db)
 
 class Testing(db.Model):
     __tablename__ = 'testings'

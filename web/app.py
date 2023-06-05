@@ -126,7 +126,7 @@ def execute_query():
 
     key = reg_name + test_name + year
 
-    # Отримання унікальних років з бази даних
+
     year_options = [str(y[0]) for y in db.session.query(Testing.Year).distinct().all()]
     reg_names = [reg_name[0] for reg_name in db.session.query(Participant.RegName).distinct().all()]
     tests = [test[0] for test in db.session.query(Testing.Test).distinct().all()]
@@ -138,10 +138,9 @@ def execute_query():
     else:
         cache = False
 
-    # Обработка отправки формы и выполнение необходимых действий
+
 
     if reg_name == 'all':
-        # Виконати запит до бази даних для всіх регіонів і років
         query = db.session.query(
             Participant.RegName,
             Testing.Year,
@@ -162,7 +161,6 @@ def execute_query():
         return render_template('query.html', reg_names=reg_names, tests=tests, year_options=year_options,
                                average_scores=average_scores, reg_name=reg_name, year=year, **arguments)
     else:
-        # Виконати запит до бази даних для конкретного регіону і року
         average_scores = {}
 
         if 'all' in year:
@@ -229,11 +227,11 @@ def update_row():
     if row is None:
         return 'Row not found'
 
-    # Оновити дані рядка
+
     for column, value in updated_data.items():
         setattr(row, column, value)
 
-    # Зберегти зміни у базі даних
+
     db.session.commit()
     selected_table = table_name
     limit = 10
@@ -259,8 +257,8 @@ def add_rows():
     updated_data = {column: request.form.get(column) for column in request.form if
                     column != 'table_name' and column != 'row_id'}
     model_class = get_model_class(table_name)
-    row = model_class(**updated_data)  # Створення нового об'єкта рядка
-    db.session.add(row)  # Додавання рядка до сесії ORM
+    row = model_class(**updated_data)
+    db.session.add(row)
     db.session.commit()
     return redirect('/main')
 
@@ -293,16 +291,16 @@ def upgrade():
     table_model = get_table_model(table_name)
     row = table_model.query.get(row_id)
 
-    # Отримання значень з форми редагування та оновлення даних рядка
+
     for column in row.__table__.columns:
         column_name = column.name
         new_value = request.form.get(column_name)
         setattr(row, column_name, new_value)
 
-    # Збереження оновленого рядка в базі даних
+
     db.session.commit()
 
-    return render_template('edit_row.html', row=row, table_name=table_name, row_id=row_id)
+    return render_template('p_edit_row.html', row=row, table_name=table_name, row_id=row_id)
 
 
 @app.route('/delete_row', methods=['POST'])
