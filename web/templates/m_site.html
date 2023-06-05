@@ -8,19 +8,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <a href="{{ url_for('query') }}" class="btn btn-primary">Перейти до запиту</a>
-    <a href="{{ url_for('add_row') }}" class="btn btn-primary">Додати новий запис</a>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Перейти до вибору бази даних</a>
+    <a href="{{ url_for('query_m') }}" class="btn btn-primary">Перейти до запиту</a>
+    <a href="{{ url_for('add_row_m') }}" class="btn btn-primary">Додати новий запис</a>
     <br><br>
     <div class="form-container">
-    <form method="POST" action="/main" class="form-inline" >
+    <form method="POST" action="/main/mongo" class="form-inline" >
         <label for="table-select">Виберіть таблицю:</label>
         <select id="table-select" name="table" class="form-control" required>
             <option value="" disabled selected>Оберіть назву таблиці</option>
-            <option value="educational_institutions" {% if table_name == 'educational_institutions' %}selected{% endif %}>educational_institutions</option>
-            <option value="territories" {% if table_name == 'territories' %}selected{% endif %}>territories</option>
-            <option value="participants" {% if table_name == 'participants' %}selected{% endif %}>participants</option>
-            <option value="points_of_observation" {% if table_name == 'points_of_observation' %}selected{% endif %}>points_of_observation</option>
-            <option value="testings" {% if table_name == 'testings' %}selected{% endif %}>testings</option>
+            <option value="educational_institution_mongo" {% if table_name == 'educational_institution_mongo' %}selected{% endif %}>educational_institutions</option>
+            <option value="territory_mongo" {% if table_name == 'territory_mongo' %}selected{% endif %}>territories</option>
+            <option value="participant_mongo" {% if table_name == 'participant_mongo' %}selected{% endif %}>participants</option>
+            <option value="point_of_observation_mongo" {% if table_name == 'point_of_observation_mongo' %}selected{% endif %}>points_of_observation</option>
+            <option value="testing_mongo" {% if table_name == 'testing_mongo' %}selected{% endif %}>testings</option>
         </select>
         <label for="limit-input">Кількість записів:</label>
         <input value="{{ limit }}" type="number" id="limit-input" name="limit" min="1" max="100" class="form-control" required>
@@ -28,15 +29,15 @@
     </form>
 
 
-    <form method="POST" action="/search" class="form-inline">
+    <form method="POST" action="/search/mongo" class="form-inline">
         <label for="table-search-select">Виберіть таблицю для пошуку:</label>
        <select id="table-search-select" name="table_search" class="form-control" onchange="updateColumns()" required>
             <option value="" disabled selected>Оберіть назву таблиці</option>
-            <option value="educational_institutions">educational_institutions</option>
-            <option value="territories">territories</option>
-            <option value="participants">participants</option>
-            <option value="points_of_observation">points_of_observation</option>
-            <option value="testings">testings</option>
+            <option value="educational_institution_mongo">educational_institutions</option>
+            <option value="territory_mongo">territories</option>
+            <option value="participant_mongo">participants</option>
+            <option value="point_of_observation_mongo">points_of_observation</option>
+            <option value="testing_mongo">testings</option>
         </select>
         <label for="column-select">Виберіть колонку:</label>
         <select id="column-select" name="column_search" class="form-control" required>
@@ -46,53 +47,55 @@
         <input type="submit" value="Пошук" class="btn btn-primary">
     </form>
     </div>
-    {% if table_data %}
+{% if table_data %}
+
 <table class="table">
     <thead>
-            {% if search_data %}
-                    <tr>
-            <th colspan="100%" style="text-align: center; font-size: 30px; font-weight: bold; padding: 10px;">Результат пошуку: Таблиця - "{{ search_data[0] }}"<br> Стовбчик - "{{ search_data[1] }}"<br> Значення - "{{ search_data[2] }}" </th>
-        </tr>
-            {%else %}
-        <tr>
-            <th colspan="100%" style="text-align: center; font-size: 30px; font-weight: bold; padding: 10px;">Таблиця: {{ table_name }}</th>
-        </tr>
-            {% endif %}
+        {% if search_data %}
+            <tr>
+                <th colspan="100%" style="text-align: center; font-size: 30px; font-weight: bold; padding: 10px;">Результат пошуку: Таблиця - "{{ search_data[0] }}"<br> Стовбчик - "{{ search_data[1] }}"<br> Значення - "{{ search_data[2] }}" </th>
+            </tr>
+        {% else %}
+            <tr>
+                <th colspan="100%" style="text-align: center; font-size: 30px; font-weight: bold; padding: 10px;">Таблиця: {{ table_name }}</th>
+            </tr>
+        {% endif %}
         <tr>
             {% for column in column_names %}
-            <th>{{ column }}</th>
+                <th>{{ column }}</th>
             {% endfor %}
             <th>Опції</th>
         </tr>
     </thead>
     <tbody>
-        {% for row in table_data %}
-        <tr>
-            <form method="POST" action="/update_row" class="form-inline">
-                <input type="hidden" name="row_id" value="{{ row.ID }}">
-                <input type="hidden" name="table_name" value="{{ table_name }}">
-                {% for column in row.__table__.columns %}
+{% for row in table_data %}
+    <tr>
+        <form method="POST" action="/update_row/mongo" class="form-inline">
+            <input type="hidden" name="row_id" value="{{ row._id }}">
+            <input type="hidden" name="table_name" value="{{ table_name }}">
+            {% for column in column_names %}
                 <td>
-                    <input type="text" name="{{ column.name }}" value="{{ row[column.name] }}" class="row-input">
+                    <input type="text" name="{{ column }}" value="{{ row[column] }}" class="row-input">
                 </td>
-                {% endfor %}
-                <td>
-                    <button type="submit" class="update-button">Оновити</button>
-                </td>
-            </form>
+            {% endfor %}
             <td>
-                <form method="POST" action="/delete_row" class="form-inline">
-                    <input type="hidden" name="row_id" value="{{ row.ID }}">
-                    <input type="hidden" name="table_name" value="{{ table_name }}">
-                    <button type="submit" class="delete-button">Видалити</button>
-                </form>
+                <button type="submit" class="update-button">Оновити</button>
             </td>
-        </tr>
-        {% endfor %}
+        </form>
+        <td>
+            <form method="POST" action="/delete_row/mongo" class="form-inline">
+                <input type="hidden" name="row_id" value="{{ row._id }}">
+                <input type="hidden" name="table_name" value="{{ table_name }}">
+                <button type="submit" class="delete-button">Видалити</button>
+            </form>
+        </td>
+    </tr>
+{% endfor %}
     </tbody>
 </table>
 
-    {% endif %}
+{% endif %}
+
 
     <script>
         function updateColumns() {
@@ -100,7 +103,7 @@
     const table = tableSelect.value;
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/get_columns", true);
+    xhr.open("POST", "/get_columns/mongo", true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = function() {
