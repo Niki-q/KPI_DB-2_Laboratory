@@ -74,6 +74,9 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       RESULTS_TABLE_NAME: ${RESULTS_TABLE_NAME}
       REDIS_HOST: redis
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_DB: zno_result
     restart: always
     ports:
       - "5000:5000"
@@ -86,12 +89,15 @@ services:
       - db
     networks:
       - MY
+      - MY_mongo
+
   redis:
     image: redis:latest
     ports:
       - '6379:6379'
     networks:
       - MY
+      - MY_mongo
 #    volumes:
 #      - ./redis-data:/data
 
@@ -111,14 +117,14 @@ services:
     image: mongo
     container_name: mongodb
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: your_mongodb_user
-      MONGO_INITDB_ROOT_PASSWORD: your_mongodb_password
+    networks:
+      - MY_mongo
 
   app-migrate-mongo:
+#    profiles: ["migrate"]
     build: ./migrate-mongo
     depends_on:
       - mongodb
@@ -133,9 +139,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       MONGO_HOST: mongodb
       MONGO_PORT: 27017
-      MONGO_DB: your_mongodb_db
+      MONGO_DB: zno_result
       MONGO_USER: your_mongodb_user
       MONGO_PASSWORD: your_mongodb_password
+    networks:
+      - MY
+      - MY_mongo
 
 volumes:
   db_data:
@@ -143,5 +152,6 @@ volumes:
 
 networks:
   MY:
+  MY_mongo:
 
 

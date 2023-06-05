@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <a href="{{ url_for('query') }}" class="btn btn-primary">Перейти до запиту</a>
-    <a href="{{ url_for('add_row') }}" class="btn btn-primary">Додати новий запис</a>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Перейти до вибору бази даних</a>
+    <a href="{{ url_for('query_m') }}" class="btn btn-primary">Перейти до запиту</a>
+    <a href="{{ url_for('add_row_m') }}" class="btn btn-primary">Додати новий запис</a>
     <br><br>
     <div class="form-container">
-    <form method="POST" action="/main" class="form-inline" >
+    <form method="POST" action="/main/mongo" class="form-inline" >
         <label for="table-select">Виберіть таблицю:</label>
         <select id="table-select" name="table" class="form-control" required>
             <option value="" disabled selected>Оберіть назву таблиці</option>
@@ -28,7 +29,7 @@
     </form>
 
 
-    <form method="POST" action="/search" class="form-inline">
+    <form method="POST" action="/search/mongo" class="form-inline">
         <label for="table-search-select">Виберіть таблицю для пошуку:</label>
        <select id="table-search-select" name="table_search" class="form-control" onchange="updateColumns()" required>
             <option value="" disabled selected>Оберіть назву таблиці</option>
@@ -69,7 +70,7 @@
     <tbody>
 {% for row in table_data %}
     <tr>
-        <form method="POST" action="/update_row" class="form-inline">
+        <form method="POST" action="/update_row/mongo" class="form-inline">
             <input type="hidden" name="row_id" value="{{ row._id }}">
             <input type="hidden" name="table_name" value="{{ table_name }}">
             {% for column in column_names %}
@@ -82,7 +83,7 @@
             </td>
         </form>
         <td>
-            <form method="POST" action="/delete_row" class="form-inline">
+            <form method="POST" action="/delete_row/mongo" class="form-inline">
                 <input type="hidden" name="row_id" value="{{ row._id }}">
                 <input type="hidden" name="table_name" value="{{ table_name }}">
                 <button type="submit" class="delete-button">Видалити</button>
@@ -102,7 +103,7 @@
     const table = tableSelect.value;
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/get_columns", true);
+    xhr.open("POST", "/get_columns/mongo", true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = function() {

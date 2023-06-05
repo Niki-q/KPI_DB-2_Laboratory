@@ -1,186 +1,233 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from mongoengine import connect, Document, StringField, IntField, FloatField
-import uuid
+import logging
+import os
+import time
+import psycopg2
+from pymongo import MongoClient
+
+DB_CONFIG = {'user': os.getenv("POSTGRES_USER"),
+             'password': os.getenv("POSTGRES_PASSWORD"),
+             'host': os.getenv("POSTGRES_HOST"),
+             'port': os.getenv("POSTGRES_PORT"),
+             'database': os.getenv("POSTGRES_NAME")}
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:111@localhost:5432/zno'
-db = SQLAlchemy(app)
-connect('result_zno')
-
-class EducationalInstitution(db.Model):
-    __tablename__ = 'educational_institutions'
-
-    ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    TypeName = db.Column(db.String)
-    AreaName = db.Column(db.String)
-    TerName = db.Column(db.String)
-    Parent = db.Column(db.String)
-    Name = db.Column(db.String)
 
 
-class EducationalInstitutionMongo(Document):
-    _id = IntField()
-    TypeName = StringField()
-    AreaName = StringField()
-    TerName = StringField()
-    Parent = StringField()
-    Name = StringField()
+
+def init_logging():
+    """
+    Инициализирует журналирование (логирование) для текущего модуля с уровнем DEBUG.
+
+    Возвращает:
+    Экземпляр логгера для текущего модуля.
+    """
+    logging.basicConfig(level=logging.DEBUG)
+    return logging.getLogger(__name__)
 
 
-class Participant(db.Model):
-    __tablename__ = 'participants'
+start_time = time.time()
 
-    ID = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4()))
-    Birth = db.Column(db.Integer)
-    SexTypeName = db.Column(db.String)
-    RegName = db.Column(db.String)
-    AreaName = db.Column(db.String)
-    Ter_id = db.Column(db.Integer, db.ForeignKey('territories.ID'))
-    ClassProfileName = db.Column(db.String)
-    ClassLangName = db.Column(db.String)
-    EO_id = db.Column(db.Integer, db.ForeignKey('educational_institutions.ID'))
-    testings = db.relationship("Testing", cascade="delete")
+logger = init_logging()
 
 
-class Territory(db.Model):
-    __tablename__ = 'territories'
-
-    ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Name = db.Column(db.String)
-    TypeName = db.Column(db.String)
-    participants = db.relationship("Participant", cascade="delete")
 
 
-class PointOfObservation(db.Model):
-    __tablename__ = 'points_of_observation'
-    ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Name = db.Column(db.String)
-    RegName = db.Column(db.String)
-    AreaName = db.Column(db.String)
-    TerName = db.Column(db.String)
-    testings = db.relationship("Testing", cascade="delete")
+# Підключення до PostgreSQL
+pg_conn = psycopg2.connect(database=DB_CONFIG['database'], user=DB_CONFIG['user'], password=DB_CONFIG['password'], host=DB_CONFIG['host'], port=DB_CONFIG['port'])
+pg_cursor = pg_conn.cursor()
+
+mongo_host = os.getenv('MONGO_HOST')
+mongo_port = int(os.getenv('MONGO_PORT'))
+mongo_database = os.getenv('MONGO_DB')
+
+
+mongo_client = MongoClient(f'mongodb://{mongo_host}:{mongo_port}')
+mongo_db = mongo_client[f'{mongo_database}']
 
 mongo_client.drop_database(mongo_db)
 
-class Testing(db.Model):
-    __tablename__ = 'testings'
-    ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Part_ID = db.Column(db.String(36), db.ForeignKey('participants.ID'))
-    Point_ID = db.Column(db.Integer, db.ForeignKey('points_of_observation.ID'))
-    Year = db.Column(db.Integer)
-    Test = db.Column(db.String)
-    TestStatus = db.Column(db.String)
-    Ball100 = db.Column(db.Float)
-    Ball12 = db.Column(db.Float)
-    Ball = db.Column(db.Float)
-    participants = db.relationship("Participant", cascade="delete")
 
 
-class ParticipantMongo(Document):
-    _id = StringField()
-    Birth = IntField()
-    SexTypeName = StringField()
-    RegName = StringField()
-    AreaName = StringField()
-    Ter_id = IntField()
-    ClassProfileName = StringField()
-    ClassLangName = StringField()
-    EO_id = IntField()
+mongo_collection = mongo_db['educational_institution_mongo']
+
+# Отримання загальної кількості рядків в PostgreSQL таблиці
+pg_cursor.execute("SELECT COUNT(*) FROM educational_institutions")
+total_rows = pg_cursor.fetchone()[0]
+
+# Підготовка списку документів для вставки в MongoDB
+documents = []
+pg_cursor.execute("SELECT * FROM educational_institutions")
+# Ітерація через рядки з PostgreSQL та додавання їх до списку документів
+for row in pg_cursor:
+    # Перетворення рядка з PostgreSQL на документ MongoDB
+    document = {
+        '_id': row[0],
+        'TypeName': row[1],
+        'AreaName':row[2],
+        'TerName': row[3],
+        'Parent': row[4],
+        'Name': row[5]
+    }
+    documents.append(document)
+
+    # Якщо список документів досягне певного розміру (наприклад, 1000), виконується вставка в MongoDB
+    if len(documents) == 10000:
+        mongo_collection.insert_many(documents)
+        documents = []  # Очистка списку документів
+
+# Вставка залишку документів, якщо вони є
+if documents:
+    mongo_collection.insert_many(documents)
+
+logger.info("educational_institution_mongo already migrated")
 
 
-class TerritoryMongo(Document):
-    _id = IntField()
-    Name = StringField()
-    TypeName = StringField()
+mongo_collection = mongo_db['territory_mongo']
+
+# Отримання загальної кількості рядків в PostgreSQL таблиці
+pg_cursor.execute("SELECT COUNT(*) FROM territories")
+total_rows = pg_cursor.fetchone()[0]
+
+# Підготовка списку документів для вставки в MongoDB
+documents = []
+pg_cursor.execute("SELECT * FROM territories")
+# Ітерація через рядки з PostgreSQL та додавання їх до списку документів
+for row in pg_cursor:
+    # Перетворення рядка з PostgreSQL на документ MongoDB
+    document = {
+        '_id': row[0],
+        'Name': row[1],
+        'TypeName':row[2],
+    }
+    documents.append(document)
+
+    # Якщо список документів досягне певного розміру (наприклад, 1000), виконується вставка в MongoDB
+    if len(documents) == 10000:
+        mongo_collection.insert_many(documents)
+        documents = []  # Очистка списку документів
+
+# Вставка залишку документів, якщо вони є
+if documents:
+    mongo_collection.insert_many(documents)
+
+logger.info("territory_mongo already migrated")
 
 
-class PointOfObservationMongo(Document):
-    _id = IntField()
-    Name = StringField()
-    RegName = StringField()
-    AreaName = StringField()
-    TerName = StringField()
+
+mongo_collection = mongo_db['participant_mongo']
+
+# Отримання загальної кількості рядків в PostgreSQL таблиці
+pg_cursor.execute("SELECT COUNT(*) FROM participants")
+total_rows = pg_cursor.fetchone()[0]
+
+# Підготовка списку документів для вставки в MongoDB
+documents = []
+pg_cursor.execute("SELECT * FROM participants")
+# Ітерація через рядки з PostgreSQL та додавання їх до списку документів
+for row in pg_cursor:
+    # Перетворення рядка з PostgreSQL на документ MongoDB
+    document = {
+        '_id': row[0],
+        'Birth': row[1],
+        'SexTypeName':row[2],
+        'RegName': row[3],
+        'AreaName': row[4],
+        'Ter_id': row[5],
+        'ClassProfileName': row[6],
+        'ClassLangName': row[7],
+        'EO_id': row[8],
+
+    }
+    documents.append(document)
+
+    # Якщо список документів досягне певного розміру (наприклад, 1000), виконується вставка в MongoDB
+    if len(documents) == 10000:
+        mongo_collection.insert_many(documents)
+        documents = []  # Очистка списку документів
+
+# Вставка залишку документів, якщо вони є
+if documents:
+    mongo_collection.insert_many(documents)
+logger.info("participants_mongo already migrated")
 
 
-class TestingMongo(Document):
-    _id = IntField()
-    Part_ID = StringField()
-    Point_ID = IntField()
-    Year = IntField()
-    Test = StringField()
-    TestStatus = StringField()
-    Ball100 = FloatField()
-    Ball12 = FloatField()
-    Ball = FloatField()
 
 
+mongo_collection = mongo_db['testing_mongo']
 
-with app.app_context():
-    educational_institutions = db.session.query(EducationalInstitution).all()
+# Отримання загальної кількості рядків в PostgreSQL таблиці
+pg_cursor.execute("SELECT COUNT(*) FROM testings")
+total_rows = pg_cursor.fetchone()[0]
 
-    for institution in educational_institutions:
-        ei = EducationalInstitutionMongo(
-            _id=institution.ID,
-            TypeName=institution.TypeName,
-            AreaName=institution.AreaName,
-            TerName=institution.TerName,
-            Parent=institution.Parent,
-            Name=institution.Name
-        )
-        ei.save()
+# Підготовка списку документів для вставки в MongoDB
+documents = []
+pg_cursor.execute("SELECT * FROM testings")
+# Ітерація через рядки з PostgreSQL та додавання їх до списку документів
+for row in pg_cursor:
+    # Перетворення рядка з PostgreSQL на документ MongoDB
+    document = {
+        '_id': row[0],
+        'Part_ID': row[1],
+        'Point_ID':row[2],
+        'Year': row[3],
+        'Test': row[4],
+        'TestStatus': row[5],
+        'Ball100': row[6],
+        'Ball12': row[7],
+        'Ball':row[8]
+    }
+    documents.append(document)
 
-    participants = db.session.query(Participant).all()
+    # Якщо список документів досягне певного розміру (наприклад, 1000), виконується вставка в MongoDB
+    if len(documents) == 10000:
+        mongo_collection.insert_many(documents)
+        documents = []  # Очистка списку документів
 
-    for participant in participants:
-        p = ParticipantMongo(
-            _id=participant.ID,
-            Birth=participant.Birth,
-            SexTypeName=participant.SexTypeName,
-            RegName=participant.RegName,
-            AreaName=participant.AreaName,
-            Ter_id=participant.Ter_id,
-            ClassProfileName=participant.ClassProfileName,
-            ClassLangName=participant.ClassLangName,
-            EO_id=participant.EO_id
-        )
-        p.save()
+# Вставка залишку документів, якщо вони є
+if documents:
+    mongo_collection.insert_many(documents)
 
-    territories = db.session.query(Territory).all()
+logger.info("testings_mongo already migrated")
 
-    for territory in territories:
-        t = TerritoryMongo(
-            _id = territory.ID,
-            Name=territory.Name,
-            TypeName=territory.TypeName
-        )
-        t.save()
 
-    points = db.session.query(PointOfObservation).all()
+mongo_collection = mongo_db['point_of_observation_mongo']
 
-    for point in points:
-        p = PointOfObservationMongo(
-            _id=point.ID,
-            Name=point.Name,
-            RegName=point.RegName,
-            AreaName=point.AreaName,
-            TerName=point.TerName
-        )
-        p.save()
+# Отримання загальної кількості рядків в PostgreSQL таблиці
+pg_cursor.execute("SELECT COUNT(*) FROM points_of_observation")
+total_rows = pg_cursor.fetchone()[0]
 
-    testings = db.session.query(Testing).all()
+# Підготовка списку документів для вставки в MongoDB
+documents = []
+pg_cursor.execute("SELECT * FROM points_of_observation")
+# Ітерація через рядки з PostgreSQL та додавання їх до списку документів
+for row in pg_cursor:
+    # Перетворення рядка з PostgreSQL на документ MongoDB
+    document = {
+        '_id': row[0],
+        'Name': row[1],
+        'RegName':row[2],
+        'AreaName': row[3],
+        'TerName': row[4],
+    }
+    documents.append(document)
 
-    for testing in testings:
-        t = TestingMongo(
-            _id=testing.ID,
-            Part_ID=testing.Part_ID,
-            Point_ID=testing.Point_ID,
-            Year=testing.Year,
-            Test=testing.Test,
-            TestStatus=testing.TestStatus,
-            Ball100=testing.Ball100,
-            Ball12=testing.Ball12,
-            Ball=testing.Ball
-        )
-        t.save()
+    # Якщо список документів досягне певного розміру (наприклад, 1000), виконується вставка в MongoDB
+    if len(documents) == 10000:
+        mongo_collection.insert_many(documents)
+        documents = []  # Очистка списку документів
+
+# Вставка залишку документів, якщо вони є
+if documents:
+    mongo_collection.insert_many(documents)
+
+logger.info("points_of_observation_mongo already migrated")
+
+
+# Закриття підключень
+pg_cursor.close()
+pg_conn.close()
+mongo_client.close()
+
+
+fin_time = time.time() - start_time
+logger.info(f"Час виконання програми: {fin_time} секунд ({round(fin_time / 60, 2)} хвилин) ")

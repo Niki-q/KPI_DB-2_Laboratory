@@ -1,8 +1,7 @@
-from mongoengine import connect, Document, StringField, IntField, FloatField
+from mongoengine import Document, StringField, IntField, FloatField
 from flask_sqlalchemy import SQLAlchemy
 import uuid
 db = SQLAlchemy()
-
 class EducationalInstitution(db.Model):
     __tablename__ = 'educational_institutions'
 
@@ -15,6 +14,7 @@ class EducationalInstitution(db.Model):
 
 
 class EducationalInstitutionMongo(Document):
+    _id = IntField()
     TypeName = StringField()
     AreaName = StringField()
     TerName = StringField()
@@ -71,6 +71,7 @@ class Testing(db.Model):
 
 
 class ParticipantMongo(Document):
+    _id = StringField()
     Birth = IntField()
     SexTypeName = StringField()
     RegName = StringField()
@@ -82,11 +83,13 @@ class ParticipantMongo(Document):
 
 
 class TerritoryMongo(Document):
+    _id = IntField()
     Name = StringField()
     TypeName = StringField()
 
 
 class PointOfObservationMongo(Document):
+    _id = IntField()
     Name = StringField()
     RegName = StringField()
     AreaName = StringField()
@@ -94,6 +97,7 @@ class PointOfObservationMongo(Document):
 
 
 class TestingMongo(Document):
+    _id = IntField()
     Part_ID = StringField()
     Point_ID = IntField()
     Year = IntField()
@@ -102,4 +106,3 @@ class TestingMongo(Document):
     Ball100 = FloatField()
     Ball12 = FloatField()
     Ball = FloatField()
-
