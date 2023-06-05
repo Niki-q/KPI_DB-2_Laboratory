@@ -11,6 +11,10 @@ from sqlalchemy import func, distinct
 import redis
 from flask import jsonify
 
+from pymongo import MongoClient
+import struct
+
+
 GENERAL_TABLE_NAME = os.getenv("RESULTS_TABLE_NAME")
 OUT_CSV_FILE = os.getenv("OUTPUT_FILE_NAME")
 
@@ -32,6 +36,13 @@ redis_client = redis.Redis(host=redis_host, port=redis_port, password=None)
 app.config['CACHE_TYPE'] = 'redis'
 app.config['CACHE_REDIS_HOST'] = redis_host
 app.config['CACHE_REDIS_PORT'] = redis_port
+
+mongo_host = os.getenv('MONGO_HOST')
+mongo_port = int(os.getenv('MONGO_PORT'))
+mongo_db = os.getenv('MONGO_DB')
+
+client = MongoClient(f'mongodb://{mongo_host}:{mongo_port}')
+db1 = client[f'{mongo_db}']
 
 
 def init_logging():
@@ -104,7 +115,7 @@ def get_table_data(selected_table, count_limit):
 
 @app.route('/')
 def index():
-    return redirect('/main')
+    return render_template('chose.html')
 
 
 @app.route('/query', methods=['GET'])
@@ -113,7 +124,7 @@ def query():
     tests = [test[0] for test in db.session.query(Testing.Test).distinct().all()]
     average_scores = False
 
-    return render_template('query.html', reg_names=reg_names, tests=tests, average_scores=average_scores)
+    return render_template('p_query.html', reg_names=reg_names, tests=tests, average_scores=average_scores)
 
 
 @app.route('/query', methods=['POST'])
@@ -124,24 +135,23 @@ def execute_query():
 
     arguments = {'selected_reg_name': reg_name, 'selected_test_name': test_name, 'selected_year': year}
 
-    key = reg_name + test_name + year
+    key = 'postgres' + str(reg_name) + str(test_name) + str(year)
 
-    # Отримання унікальних років з бази даних
+
     year_options = [str(y[0]) for y in db.session.query(Testing.Year).distinct().all()]
     reg_names = [reg_name[0] for reg_name in db.session.query(Participant.RegName).distinct().all()]
     tests = [test[0] for test in db.session.query(Testing.Test).distinct().all()]
 
     if average_scores := redis_client.get(str(key)):
         average_scores = pickle.loads(average_scores)
-        return render_template('query.html', reg_names=reg_names, tests=tests, year_options=year_options,
+        return render_template('p_query.html', reg_names=reg_names, tests=tests, year_options=year_options,
                                average_scores=average_scores, reg_name=reg_name, year=year, **arguments)
     else:
         cache = False
 
-    # Обработка отправки формы и выполнение необходимых действий
+
 
     if reg_name == 'all':
-        # Виконати запит до бази даних для всіх регіонів і років
         query = db.session.query(
             Participant.RegName,
             Testing.Year,
@@ -159,10 +169,9 @@ def execute_query():
         if not cache:
             redis_client.set(str(key), pickle.dumps(average_scores))
 
-        return render_template('query.html', reg_names=reg_names, tests=tests, year_options=year_options,
+        return render_template('p_query.html', reg_names=reg_names, tests=tests, year_options=year_options,
                                average_scores=average_scores, reg_name=reg_name, year=year, **arguments)
     else:
-        # Виконати запит до бази даних для конкретного регіону і року
         average_scores = {}
 
         if 'all' in year:
@@ -179,7 +188,7 @@ def execute_query():
             average_scores = {f"{reg_name}-{y}": avg_score for y, avg_score in query_result}
             if not cache:
                 redis_client.set(str(key), pickle.dumps(average_scores))
-            return render_template('query.html', reg_names=reg_names, tests=tests, year_options=year_options,
+            return render_template('p_query.html', reg_names=reg_names, tests=tests, year_options=year_options,
                                    average_scores=average_scores, reg_name=reg_name, year=year, **arguments)
         else:
             for y in year:
@@ -196,7 +205,7 @@ def execute_query():
                 average_scores[f"{reg_name}-{y}"] = average_score
             if not cache:
                 redis_client.set(str(key), pickle.dumps(average_scores))
-            return render_template('query.html', reg_names=reg_names, tests=tests, year_options=year_options,
+            return render_template('p_query.html', reg_names=reg_names, tests=tests, year_options=year_options,
                                    average_scores=average_scores, average_score=average_score, reg_name=reg_name,
                                    year=year, **arguments)
 
@@ -229,24 +238,24 @@ def update_row():
     if row is None:
         return 'Row not found'
 
-    # Оновити дані рядка
+
     for column, value in updated_data.items():
         setattr(row, column, value)
 
-    # Зберегти зміни у базі даних
+
     db.session.commit()
     selected_table = table_name
     limit = 10
     column_names, table_data = get_table_data(selected_table, limit)
-    return render_template('site.html', column_names=column_names, table_data=table_data, table_name=selected_table)
+    return render_template('p_site.html', column_names=column_names, table_data=table_data, table_name=selected_table)
 
 
 @app.route('/add_row', methods=['GET'])
 def add_row():
-    return render_template('add_row.html')
+    return render_template('p_add_row.html')
 
 
-def get_distinct_values(table_name, column_name):
+def get_distinct_values_p(table_name, column_name):
     YourTableName = get_table_model(table_name)
     distinct_values = db.session.query(distinct(getattr(YourTableName, column_name)).label('count')).all()
 
@@ -259,8 +268,8 @@ def add_rows():
     updated_data = {column: request.form.get(column) for column in request.form if
                     column != 'table_name' and column != 'row_id'}
     model_class = get_model_class(table_name)
-    row = model_class(**updated_data)  # Створення нового об'єкта рядка
-    db.session.add(row)  # Додавання рядка до сесії ORM
+    row = model_class(**updated_data)
+    db.session.add(row)
     db.session.commit()
     return redirect('/main')
 
@@ -277,11 +286,11 @@ def upgate_row():
     result = {}
     special_colum = []
     for i in column_names:
-        temp = get_distinct_values(table_name, i)
+        temp = get_distinct_values_p(table_name, i)
         if len(temp) <= 25:
             result[i] = [temp]
             special_colum.append(i)
-    return render_template('add_row.html', selected_table=table_name, columns=column_names, special_colum=special_colum,
+    return render_template('p_add_row.html', selected_table=table_name, columns=column_names, special_colum=special_colum,
                            result=result)
 
 
@@ -293,16 +302,16 @@ def upgrade():
     table_model = get_table_model(table_name)
     row = table_model.query.get(row_id)
 
-    # Отримання значень з форми редагування та оновлення даних рядка
+
     for column in row.__table__.columns:
         column_name = column.name
         new_value = request.form.get(column_name)
         setattr(row, column_name, new_value)
 
-    # Збереження оновленого рядка в базі даних
+
     db.session.commit()
 
-    return render_template('edit_row.html', row=row, table_name=table_name, row_id=row_id)
+    return render_template('p_edit_row.html', row=row, table_name=table_name, row_id=row_id)
 
 
 @app.route('/delete_row', methods=['POST'])
@@ -331,7 +340,7 @@ def search():
 
     column_names = [column.name for column in model_class.__table__.columns]
 
-    return render_template('site.html', table_data=table_data, table_name=table_search, column_names=column_names,
+    return render_template('p_site.html', table_data=table_data, table_name=table_search, column_names=column_names,
                            search_data=[table_search, column_search, value_search], limit=10)
 
 
@@ -353,8 +362,440 @@ def table(limit=10):
         column_names = None
         table_data = None
         selected_table = None
-    return render_template('site.html', column_names=column_names,
+    return render_template('p_site.html', column_names=column_names,
                            table_data=table_data, table_name=selected_table, limit=limit)
+
+#
+#
+#
+
+
+@app.route('/query/mongo', methods=['GET'])
+def query_m():
+    participant_collection = db1['participant_mongo']
+    testing_collection = db1['testing_mongo']
+
+    reg_names = participant_collection.distinct('RegName')
+
+    average_scores = False
+    tests= ['Фізика', 'Німецька мова', 'Українська мова і література', 'Англійська мова', 'Історія України', 'Іспанська мова',
+     'Географія', 'Хімія', 'Біологія', 'Математика', 'Французька мова']
+    reg_names = ['Рівненська область', 'Львівська область', 'м.Київ', 'Житомирська область', 'Чернівецька область',
+     'Івано-Франківська область', 'Вінницька область', 'Тернопільська область', 'Харківська область',
+     'Полтавська область', 'Запорізька область', 'Кіровоградська область', 'Київська область', 'Херсонська область',
+     'Сумська область', 'Черкаська область', 'Закарпатська область', 'Волинська область', 'Хмельницька область',
+     'Дніпропетровська область', 'Донецька область', 'Миколаївська область', 'Одеська область', 'Чернігівська область',
+     'Луганська область']
+
+    return render_template('m_query.html', reg_names=reg_names, tests=tests, average_scores=average_scores)
+
+
+def get_regname_list():
+    collection = db1['participant_mongo']
+
+    regname_set = set()
+    cursor = collection.find({}, {'RegName': 1})
+    for document in cursor:
+        regname = document['RegName']
+        regname_set.add(regname)
+
+    return list(regname_set)
+
+
+def get_test_list():
+    collection = db1['testing_mongo']
+
+    test_set = set()
+    cursor = collection.find({}, {'Test': 1})
+    for document in cursor:
+        test = document['Test']
+        test_set.add(test)
+
+    return list(test_set)
+
+
+@app.route('/query/mongo', methods=['POST'])
+def execute_query_m():
+    reg_name = request.form.get('reg_name')
+    test_name = request.form.get('test_name')
+    year = request.form.get('year')
+
+    tests = ['Фізика', 'Німецька мова', 'Українська мова і література', 'Англійська мова', 'Історія України',
+             'Іспанська мова',
+             'Географія', 'Хімія', 'Біологія', 'Математика', 'Французька мова']
+    reg_names = ['Рівненська область', 'Львівська область', 'м.Київ', 'Житомирська область', 'Чернівецька область',
+                 'Івано-Франківська область', 'Вінницька область', 'Тернопільська область', 'Харківська область',
+                 'Полтавська область', 'Запорізька область', 'Кіровоградська область', 'Київська область',
+                 'Херсонська область',
+                 'Сумська область', 'Черкаська область', 'Закарпатська область', 'Волинська область',
+                 'Хмельницька область',
+                 'Дніпропетровська область', 'Донецька область', 'Миколаївська область', 'Одеська область',
+                 'Чернігівська область',
+                 'Луганська область']
+    year_options = [2019, 2020]
+
+    arguments = {'selected_reg_name': reg_name, 'selected_test_name': test_name, 'selected_year': year, 'tests':tests, 'reg_names':reg_names, 'year_options':year_options}
+
+    key = 'mongo' + str(reg_name) + str(test_name) + str(year)
+
+
+    if avg_dict := redis_client.get(str(key)):
+        avg_dict = pickle.loads(avg_dict)
+        return render_template('m_query.html', average_scores=avg_dict, reg_name=reg_name, year=year, **arguments)
+    else:
+        cache = False
+
+
+    avg_dict = {}
+    if reg_name == 'all':
+        if year == 'all':
+            result = db1['testing_mongo'].aggregate([
+                {
+                    '$match': {
+                        'Test': test_name,
+                        'TestStatus': 'Зараховано',
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'participant_mongo',
+                        'localField': 'Part_ID',
+                        'foreignField': '_id',
+                        'as': 'participant'
+                    }
+                }, {
+                    '$group': {
+                        '_id': {
+                            'Year': '$Year',
+                            'RegName': '$participant.RegName'
+                        },
+                        'average': {
+                            '$avg': '$Ball'
+                        }
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'Year': '$_id.Year',
+                        'RegName': '$_id.RegName',
+                        'average': 1
+                    }
+                }
+            ])
+
+        else:
+            result = db1['testing_mongo'].aggregate([
+                {
+                    '$match': {
+                        'Year': int(year),
+                        'Test': test_name,
+                        'TestStatus': 'Зараховано',
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'participant_mongo',
+                        'localField': 'Part_ID',
+                        'foreignField': '_id',
+                        'as': 'participant'
+                    }
+                }, {
+                    '$group': {
+                        '_id': {
+                            'Year': '$Year',
+                            'RegName': '$participant.RegName'
+                        },
+                        'average': {
+                            '$avg': '$Ball'
+                        }
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'Year': '$_id.Year',
+                        'RegName': '$_id.RegName',
+                        'average': 1
+                    }
+                },
+
+            ])
+        for elem in result:
+
+            RegName = ''.join(elem["RegName"])
+            Year = elem["Year"]
+            avg_dict[f'{RegName}-{Year}'] = elem['average']
+
+        if not cache:
+            redis_client.set(str(key), pickle.dumps(avg_dict))
+
+        return render_template('m_query.html', average_scores=avg_dict, reg_name=reg_name, year=year, **arguments)
+    else:
+        if year == 'all':
+            result = db1['testing_mongo'].aggregate([
+                {
+                    '$match': {
+                        'Test': test_name,
+                        'TestStatus': 'Зараховано',
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'participant_mongo',
+                        'localField': 'Part_ID',
+                        'foreignField': '_id',
+                        'as': 'participant'
+                    }
+                }, {
+                    '$group': {
+                        '_id': {
+                            'Year': '$Year',
+                            'RegName': '$participant.RegName'
+                        },
+                        'average': {
+                            '$avg': '$Ball'
+                        }
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'Year': '$_id.Year',
+                        'RegName': '$_id.RegName',
+                        'average': 1
+                    }
+                },
+                {
+                    '$match': {
+                        'RegName': reg_name,
+                    }
+                }
+            ])
+
+            avg_dict = {}
+            for elem in result:
+                RegName = ''.join(elem["RegName"])
+                Year = elem["Year"]
+                avg_dict[f'{RegName}-{Year}'] = elem['average']
+
+            if not cache:
+                redis_client.set(str(key), pickle.dumps(avg_dict))
+
+            return render_template('m_query.html', average_scores=avg_dict, reg_name=reg_name, year=year, **arguments)
+        else:
+            result = db1['testing_mongo'].aggregate([
+                {
+                    '$match': {
+                        'Test': test_name,
+                        'Year': int(year),
+                        'TestStatus': 'Зараховано',
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'participant_mongo',
+                        'localField': 'Part_ID',
+                        'foreignField': '_id',
+                        'as': 'participant'
+                    }
+                }, {
+                    '$group': {
+                        '_id': {
+                            'Year': '$Year',
+                            'RegName': '$participant.RegName'
+                        },
+                        'average': {
+                            '$avg': '$Ball'
+                        }
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'Year': '$_id.Year',
+                        'RegName': '$_id.RegName',
+                        'average': 1
+                    }
+                },
+                {
+                    '$match': {
+                        'RegName': reg_name,
+                    }
+                }
+            ])
+
+            avg_dict = {}
+            for elem in result:
+
+                RegName = ''.join(elem["RegName"])
+                Year = elem["Year"]
+                avg_dict[f'{RegName}-{Year}'] = elem['average']
+
+            if not cache:
+                redis_client.set(str(key), pickle.dumps(avg_dict))
+
+            return render_template('m_query.html', average_scores=avg_dict, reg_name=reg_name, year=year, **arguments)
+
+
+@app.route('/update_row/mongo', methods=['POST'])
+def update_row_m():
+    table_name = request.form.get('table_name')
+    row_id = request.form.get('row_id')
+    updated_data = {column: request.form.get(column) for column in request.form if
+                    column != 'table_name' and column != 'row_id'}
+
+    collection = db1[table_name]
+
+
+    if table_name != "participant_mongo":
+        query = {'_id': int(row_id)}
+    else:
+        query = {'_id': row_id}
+
+    update_data = {'$set': {k: v for k, v in updated_data.items() if k != '_id'}}
+    collection.update_one(query, update_data, upsert=True)
+
+    selected_table = table_name
+    limit = 10
+    column_names = list(collection.find_one().keys())
+    all_pts = list(collection.find().limit(limit))
+    return render_template('m_site.html', column_names=column_names, table_data=all_pts, table_name=selected_table)
+
+
+def get_distinct_values(collection_name, column_name):
+    collection = db1[collection_name]
+    distinct_values = collection.distinct(column_name)
+    return distinct_values
+
+
+@app.route('/add_row/mongo', methods=['GET'])
+def add_row_m():
+    return render_template('m_add_row.html')
+
+@app.route('/add_rows/mongo', methods=['POST'])
+def add_rows_m():
+    collection_name = request.form['table_name']
+    updated_data = {column: request.form.get(column) for column in request.form if
+                    column != 'table_name' and column != 'row_id'}
+    random_id = struct.unpack('I', uuid.uuid4().bytes[:4])[0]
+    for i in updated_data:
+        elem = updated_data[i]
+        if elem.isdigit():
+            updated_data[i] = int(updated_data[i])
+    updated_data['_id'] = random_id
+    print(updated_data)
+    collection = db1[collection_name]
+    collection.insert_one(updated_data)
+
+    return redirect('/main/mongo')
+
+
+@app.route('/upgate_row/mongo', methods=['POST'])
+def upgate_row_m():
+    table_name = request.form['table-select']
+    collection = db1[table_name]
+
+    column_names = list(collection.find_one().keys())
+    all_pts = list(collection.find().limit(1))
+    excluded_column = ['_id']
+
+    for column in excluded_column:
+        if column in column_names:
+            column_names.remove(column)
+    result = {}
+    special_colum = []
+    for i in column_names:
+        temp = get_distinct_values(table_name, i)
+        if len(temp) <= 25:
+            result[i] = [temp]
+            special_colum.append(i)
+    return render_template('m_add_row.html', selected_table=table_name, columns=column_names, special_colum=special_colum,
+                           result=result)
+
+
+@app.route('/upgrade/mongo', methods=['POST'])
+def upgrade_m():
+    row_id = request.form['row_id']
+    table_name = request.form['table_name']
+
+    table_model = get_table_model(table_name)
+    row = table_model.query.get(row_id)
+
+    for column in row.__table__.columns:
+        column_name = column.name
+        new_value = request.form.get(column_name)
+        setattr(row, column_name, new_value)
+
+    db.session.commit()
+
+    return render_template('m_edit_row.html', row=row, table_name=table_name, row_id=row_id)
+
+
+@app.route('/delete_row/mongo', methods=['POST'])
+def delete_row_m():
+    row_id = request.form['row_id']
+    table_name = request.form['table_name']
+
+    collection = db1[table_name]
+    if table_name != "participant_mongo":
+        query = {'_id': int(row_id)}
+        collection.delete_one(query)
+    else:
+        query = {'_id': row_id}
+        collection.delete_one(query)
+    return redirect('/main/mongo')
+
+
+@app.route('/search/mongo', methods=['POST'])
+def search_m():
+    table_search = request.form['table_search']
+    column_search = request.form['column_search']
+    value_search = request.form['value_search']
+
+    collection = db1[table_search]
+
+    if value_search.isdigit():
+        query = {column_search: int(value_search)}
+    else:
+        query = {column_search: value_search}
+
+    results = collection.find(query).limit(20)
+
+    table_data = list(results)
+
+    column_names = list(collection.find_one().keys())
+
+    return render_template('m_site.html', table_data=table_data, table_name=table_search, column_names=column_names,
+                           search_data=[table_search, column_search, value_search], limit=10)
+
+
+@app.route('/get_columns/mongo', methods=['POST'])
+def get_columns_m():
+    table = request.json['table']
+    collection = db1[table]
+    first_document = collection.find_one()
+    column_names = list(first_document.keys())
+    return jsonify(column_names)
+
+
+@app.route('/select_database', methods=['POST'])
+def select_database_m():
+    database = request.form.get('database')
+    print(1, database)
+    if database == "mongo":
+        return redirect('/main/mongo')
+    else:
+        return redirect('/main')
+
+
+@app.route('/main/mongo', methods=['GET', 'POST'])
+def table_m(limit=10):
+    if request.method == 'POST':
+        selected_table = request.form['table']
+        limit = int(request.form['limit'])
+        collection = db1[selected_table]
+
+        column_names = list(collection.find_one().keys())
+        all_pts = list(collection.find().limit(limit))
+    else:
+        all_pts = None
+        column_names = None
+        selected_table = None
+    return render_template('m_site.html', column_names=column_names,
+                           table_data=all_pts, table_name=selected_table, limit=limit)
 
 
 if __name__ == '__main__':

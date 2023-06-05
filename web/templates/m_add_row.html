@@ -9,23 +9,23 @@
           crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-<a href="{{ url_for('index') }}" class="btn btn-primary">Повернутися до інтерфейсу CRUD</a>
+<a href="{{ url_for('table_m') }}" class="btn btn-primary">Перейти до інтерфейсу CRUD</a>
 <br><br>
 <div class="form-container">
-    <form method="POST" action="/upgate_row" class="form-inline">
+    <form method="POST" action="/upgate_row/mongo" class="form-inline">
         <label for="table-select">Виберіть таблицю:</label>
         <select id="table-select" name="table-select" class="form-control" required>
-            <option value="" disabled selected>Оберіть назву таблиці</option>
-            <option value="educational_institutions" {% if selected_table == 'educational_institutions' %}selected{% endif %}>educational_institutions</option>
-            <option value="territories" {% if selected_table == 'territories' %}selected{% endif %}>territories</option>
-            <option value="participants" {% if selected_table == 'participants' %}selected{% endif %}>participants</option>
-            <option value="points_of_observation" {% if selected_table == 'points_of_observation' %}selected{% endif %}>points_of_observation</option>
-            <option value="testings" {% if selected_table == 'testings' %}selected{% endif %}>testings</option>
+           <option value="" disabled selected>Оберіть назву таблиці</option>
+            <option value="educational_institution_mongo" {% if table_name == 'educational_institution_mongo' %}selected{% endif %}>educational_institutions</option>
+            <option value="territory_mongo" {% if table_name == 'territory_mongo' %}selected{% endif %}>territories</option>
+            <option value="participant_mongo" {% if table_name == 'participant_mongo' %}selected{% endif %}>participants</option>
+            <option value="point_of_observation_mongo" {% if table_name == 'point_of_observation_mongo' %}selected{% endif %}>points_of_observation</option>
+            <option value="testing_mongo" {% if table_name == 'testing_mongo' %}selected{% endif %}>testings</option>
         </select>
         <input type="submit" value="Додати запис у вибрану таблицю" class="btn btn-primary">
     </form>
     {% if selected_table %}
-    <form method="POST" action="/add_rows" class="form-inline">  <!-- Changed the action URL -->
+    <form method="POST" action="/add_rows/mongo" class="form-inline">  <!-- Changed the action URL -->
         {% for col_name in columns %}
             <input type="hidden" name="table_name" value="{{ selected_table }}">
             {% if col_name in special_colum %}
@@ -33,7 +33,7 @@
                 <select id="{{ col_name }}_select" name="{{ col_name }}" class="form-control">
                     <option value="" disabled selected>Оберіть значення зі списку</option>
                     {% for value in result[col_name][0] %}
-                        <option value="{{ value[0] }}">{{ value[0] }}</option>
+                        <option value="{{ value }}">{{ value }}</option>
                     {% endfor %}
                 </select>
             {% else %}
