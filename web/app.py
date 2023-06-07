@@ -124,7 +124,7 @@ def execute_query():
 
     arguments = {'selected_reg_name': reg_name, 'selected_test_name': test_name, 'selected_year': year}
 
-    key = reg_name + test_name + year
+    key = str(reg_name) + str(test_name) + str(year)
 
     # Отримання унікальних років з бази даних
     year_options = [str(y[0]) for y in db.session.query(Testing.Year).distinct().all()]
