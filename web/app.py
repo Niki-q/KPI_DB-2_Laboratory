@@ -657,9 +657,13 @@ def update_row_m():
 
 def get_distinct_values(collection_name, column_name):
     collection = db1[collection_name]
-    distinct_values = collection.distinct(column_name)
+    pipeline = [
+        {"$group": {"_id": f"${column_name}"}},
+        {"$project": {"_id": 0, column_name: "$_id"}}
+    ]
+    result = collection.aggregate(pipeline, allowDiskUse=True)
+    distinct_values = [item[column_name] for item in result]
     return distinct_values
-
 
 @app.route('/add_row/mongo', methods=['GET'])
 def add_row_m():
