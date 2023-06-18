@@ -124,7 +124,7 @@ services:
       - MY_mongo
 
   app-migrate-mongo:
-#    profiles: ["migrate"]
+    profiles: ["migrate-mongo"]
     build: ./migrate-mongo
     depends_on:
       - mongodb
