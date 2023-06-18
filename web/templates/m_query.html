@@ -41,51 +41,25 @@
 
     <button type="submit" class="btn btn-primary">Виконати запит</button>
 </form>
-{% if average_scores != false %}
-<h1>Результат запиту:</h1>
-{% if reg_name == 'all' %}
-    {% if year =='all' %}
-        <table class="table">
-            <tr>
-                <th>Регіон</th>
-                <th>Середній бал</th>
-            </tr>
-            {% for reg_score in average_scores.items() %}
-            <tr>
-                <td>{{ reg_score[0] }}</td>
-                <td>{% if reg_score[1] is not none %}{{ reg_score[1]|round(2) }}{% else %}<span style="color:red">0</span>{% endif %}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <table class="table">
-            <tr>
-                <th>Регіон</th>
-                <th>Середній бал</th>
-            </tr>
-            {% for reg, avg_score in average_scores.items() %}
-            <tr>
-                <td>{{ reg }}</td>
-                <td>{% if avg_score is not none %}{{ avg_score|round(2) }}{% else %}<span style="color:red">0</span>{% endif %}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
-{% else %}
+{% if average_scores %}
+    <h1>Результат запиту:</h1>
     <table class="table">
         <tr>
             <th>Регіон</th>
+            <th>Рік</th>
             <th>Середній бал</th>
         </tr>
-        {% for reg, avg_score in average_scores.items() %}
-        <tr>
-            <td>{{ reg }}</td>
-            <td>{% if avg_score is not none %}{{ avg_score|round(2) }}{% else %}<span style="color:red">0</span>{% endif %}</td>
-        </tr>
+        {% for reg, data in average_scores.items()|sort %}
+            <tr>
+                <td>{{ data['reg_name'] }}</td>
+                <td>{{ data['year'] }}</td>
+                <td>{% if data['avg_score'] is defined and data['avg_score'] is not none %}{{ data['avg_score']|round(2) }}{% else %}<span style="color:red">0</span>{% endif %}</td>
+            </tr>
         {% endfor %}
     </table>
 {% endif %}
-{% endif %}
+
+
 
 </body>
 </html>
